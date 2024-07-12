@@ -1,4 +1,7 @@
+import { Vizzy } from "./vizzy.js";
 const AudioContext = window.AudioContext || webkitAudioContext;
+
+let workletNode;
 
 const progs = [
   "t * ((t>>12|t>>8)&63&t>>4)",
@@ -11,7 +14,7 @@ const progs = [
   "(-t&4095)*(255&t*(t&(t>>13)))>>12)+(127&t*(234&t>>8&t>>3)>>(3&t>>14))",
   "t*(t>>((t>>9)|(t>>8))&(63&(t>>4)))",
   "(t>>6|t|t>>(t>>16))*10+((t>>11)&7)",
-  "v=(v>>1)+(v>>4)+t*(((t>>16)|(t>>6))&(69&(t>>9)))",
+  // "v=(v>>1)+(v>>4)+t*(((t>>16)|(t>>6))&(69&(t>>9)))",
   "(t|(t>>9|t>>7))*t&(t>>11|t>>9)",
 ];
 
@@ -25,6 +28,8 @@ let didLoad = new Promise((resolve, reject) => {
     await audioContext.audioWorklet.addModule("static/bb.processor.js");
 
     workletNode = new AudioWorkletNode(audioContext, "BbProcessor");
+    const vizzy = new Vizzy(audioContext);
+    workletNode.connect(vizzy.inlet);
     workletNode.connect(audioContext.destination);
     resolve();
   };

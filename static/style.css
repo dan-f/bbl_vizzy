@@ -1,0 +1,20 @@
+@font-face {
+  font-family: Sigma AF;
+  src: url(Web437_Sigma_RM_8x8.woff);
+}
+
+#vizzy {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+}
+h1 {
+  /* mix-blend-mode: difference; */
+  color: #2385ec;
+  font-size: 4vw;
+  text-align: center;
+  font-family: Sigma AF;
+}
