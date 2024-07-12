@@ -4,7 +4,7 @@ class BbProcessor extends AudioWorkletProcessor {
     this.globalSample = 0;
     this.cachedValue = 0;
     this.counter = 0;
-    this.heldSamples = 2;
+    this.heldSamples = sampleRate / 8000;
 
     this.fn = (t) => 0;
     this.port.onmessage = (event) => {
@@ -14,15 +14,18 @@ class BbProcessor extends AudioWorkletProcessor {
 
   process(inputs, outputs, parameters) {
     for (let s = 0; s < outputs[0][0].length; s++) {
-      if (this.counter === 0) {
+      if (this.counter <= 0) {
         const t = this.globalSample;
+
         this.globalSample += 1;
-        const mask = 0xff;
+        const bitDepth = 8;
+        const mask = (1 << bitDepth) - 1;
         let out = this.fn(t) & mask;
         out /= mask;
         out *= 2;
         out -= 1;
-        this.counter = this.heldSamples;
+        let remainder = 1.0 - this.counter;
+        this.counter = this.heldSamples + remainder;
         this.cachedValue = out;
       }
       this.counter--;
