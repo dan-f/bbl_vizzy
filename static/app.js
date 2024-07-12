@@ -31,6 +31,14 @@ let didLoad = new Promise((resolve, reject) => {
     const vizzy = new Vizzy(audioContext);
     workletNode.connect(vizzy.inlet);
     workletNode.connect(audioContext.destination);
+
+    document.onmousemove = (event) => {
+      const sr = event.clientX / window.innerWidth;
+      const bd = event.clientY / window.innerHeight;
+      workletNode.parameters.get("sampleRate").setValueAtTime(sr, 0);
+      workletNode.parameters.get("bitDepth").setValueAtTime(bd, 0);
+    };
+
     resolve();
   };
 });
