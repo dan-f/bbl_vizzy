@@ -1,61 +1,39 @@
 const AudioContext = window.AudioContext || webkitAudioContext;
-const todo = () => {};
-const byteBeatNode = todo();
-//byteBeatNode.connect(audioContext.destination)
 
-const exampleSource = "t * ((t>>12|t>>8)&63&t>>4)";
+const progs = [
+  "t * ((t>>12|t>>8)&63&t>>4)",
+  "((t >> 10) & 42) * t",
+  "t*(((t>>12)|(t>>8))&(63&(t>>4)))",
+  "(t*(t>>5|t>>8))>>(t>>16)",
+  "t*(((t>>9)|(t>>13))&(25&(t>>6)))",
+  "t*(((t>>11)&(t>>8))&(123&(t>>3)))",
+  "t*(t>>8*((t>>15)|(t>>8))&(20|(t>>19)*5>>t|(t>>3)))",
+  "(-t&4095)*(255&t*(t&(t>>13)))>>12)+(127&t*(234&t>>8&t>>3)>>(3&t>>14))",
+  "t*(t>>((t>>9)|(t>>8))&(63&(t>>4)))",
+  "(t>>6|t|t>>(t>>16))*10+((t>>11)&7)",
+  "v=(v>>1)+(v>>4)+t*(((t>>16)|(t>>6))&(69&(t>>9)))",
+  "(t|(t>>9|t>>7))*t&(t>>11|t>>9)",
+];
 
-const compileAudioWorklet = async (audioCtx, source, label) => {
-  const sourceString = `
-  class BbProcessor extends AudioWorkletProcessor {
-    constructor() {
-      super();
-      this.globalSample = 0;
-
-      this.cachedValue = 0;
-      this.counter = 0;
-      this.heldSamples = 2;
-    }
-
-    process(inputs, outputs, parameters) {
-      for (let s = 0; s < outputs[0][0].length; s++) {
-
-          if (this.counter === 0) {
-            const t = this.globalSample;
-            this.globalSample += 1;
-            let out = (${source}) & 0xffff;
-            out /= 0xffff;
-            out *= 2;
-            out -= 1;
-            this.counter = this.heldSamples;
-            this.cachedValue = out;
-          }
-          this.counter--;
-
-          outputs[0][0][s] = this.cachedValue;
-      }
-      // this.globalSample += outputs[0][0].length
-      return true
-    }
-  }
-
-  registerProcessor("BbProcessor${label}", BbProcessor)
-  `.trim();
-
-  const blob = new Blob([sourceString], { type: "text/javascript" });
-  const url = URL.createObjectURL(blob);
-  console.log({ blob, url });
-  await audioCtx.audioWorklet.addModule(url);
-};
-
-const hasLoaded = new Promise(async (resolve, reject) => {
+let didLoad = new Promise((resolve, reject) => {
   document.onclick = async () => {
     const audioContext = new AudioContext();
     if (audioContext.state === "suspended") {
-      audioContext.resume().then(resolve);
+      await audioContext.resume();
     }
-    await compileAudioWorklet(audioContext, exampleSource, 0);
-    workletNode = new AudioWorkletNode(audioContext, "BbProcessor0");
+
+    await audioContext.audioWorklet.addModule("static/bb.processor.js");
+
+    workletNode = new AudioWorkletNode(audioContext, "BbProcessor");
     workletNode.connect(audioContext.destination);
+    resolve();
   };
+});
+
+didLoad.then(() => {
+  let i = 0;
+  setInterval(() => {
+    workletNode.port.postMessage(`(t) => ${progs[i]}`);
+    i = (i + 1) % progs.length;
+  }, 2000);
 });
