@@ -26,14 +26,6 @@ export class Vizzy {
     };
   }
 
-  get inlet() {
-    return this.analyser;
-  }
-
-  connect(target) {
-    this.analyser.connect(target);
-  }
-
   draw() {
     this.canvasContext.fillStyle = "greenyellow";
     this.canvasContext.fillRect(0, 0, this.w, this.h);

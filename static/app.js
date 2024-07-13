@@ -1,3 +1,4 @@
+import { ByteBeat } from "./ByteBeat.js";
 import { Vizzy } from "./vizzy.js";
 
 const AudioContext = window.AudioContext || webkitAudioContext;
@@ -23,8 +24,8 @@ async function main() {
     audioContext
   );
 
+  const byteBeat = new ByteBeat(audioContext, bbNode, gainNode);
   const vizzy = new Vizzy(analyserNode, document.getElementById("vizzy"));
-  bbNode.connect(vizzy.inlet);
 
   document.onclick = () => {
     if (audioContext.state === "suspended") {
@@ -32,15 +33,15 @@ async function main() {
     }
   };
 
-  cycleProgs(bbNode);
+  cycleProgs(byteBeat);
 }
 
-function cycleProgs(bbNode) {
+function cycleProgs(byteBeat) {
   let i = 0;
-  bbNode.port.postMessage(`(t) => ${progs[i]}`);
+  byteBeat.setProgram(progs[i]);
   setInterval(() => {
     i = (i + 1) % progs.length;
-    bbNode.port.postMessage(`(t) => ${progs[i]}`);
+    byteBeat.setProgram(progs[i]);
   }, 2000);
 }
 

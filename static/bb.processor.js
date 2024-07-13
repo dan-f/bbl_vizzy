@@ -4,10 +4,10 @@ class BbProcessor extends AudioWorkletProcessor {
     this.globalSample = 0;
     this.cachedValue = 0;
     this.counter = 0;
-
     this.fn = (t) => 0;
+
     this.port.onmessage = (event) => {
-      this.fn = eval(event.data);
+      this.processMessage(event.data);
     };
   }
 
@@ -64,6 +64,14 @@ class BbProcessor extends AudioWorkletProcessor {
       outputs[0][0][s] = Math.tanh(50 * this.cachedValue);
     }
     return true;
+  }
+
+  processMessage(message) {
+    switch (message.type) {
+      case "updateFn": {
+        this.fn = eval(message.body);
+      }
+    }
   }
 }
 
