@@ -1,17 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BBL_VIZZY</title>
+    <link rel="stylesheet" href="static/style.css" />
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BBL_VIZZY</title>
-  <link rel="stylesheet" href="static/style.css">
-</head>
+  <body>
+    <!-- <h1>BBL_VIZZY</h1> -->
+    <div id="page">
+      <div id="app">
+        <textarea id="program-editor">((t >> 10) & 42) * t</textarea>
+        <button id="control-back" disabled class="control-button">back</button>
+        <button id="toggle-play" class="control-button">play</button>
+        <button id="control-forward" disabled class="control-button">
+          forward
+        </button>
+      </div>
+    </div>
 
-<body>
-  <!-- <h1>BBL_VIZZY</h1> -->
-  <script src="static/app.js" type="module"></script>
-  <canvas id="vizzy"></canvas>
-</body>
+    <canvas id="vizzy"></canvas>
 
+    <script src="static/app.js" type="module"></script>
+  </body>
 </html>

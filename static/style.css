@@ -3,6 +3,73 @@
   src: url(Web437_Sigma_RM_8x8.woff);
 }
 
+html,
+body {
+  height: 100%;
+  margin: 0;
+
+  --foreground: coral;
+  --focus: rgb(255, 0, 128);
+}
+
+body,
+textarea,
+button {
+  font-family: Sigma AF;
+}
+
+:focus {
+  outline: 0.2em dashed var(--focus);
+}
+
+h1 {
+  /* mix-blend-mode: difference; */
+  color: #2385ec;
+  font-size: 4vw;
+  text-align: center;
+}
+
+#page {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+#app {
+  padding: 0.5em;
+
+  /* grid item properties */
+  grid-column-start: 2;
+  grid-row-start: 3;
+
+  /* grid container properties */
+  display: grid;
+  gap: 0.5em;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+#program-editor {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1em;
+  resize: none;
+
+  border: 0.25em solid var(--foreground);
+  color: var(--foreground);
+  background-color: transparent;
+
+  grid-column: 1 / 4;
+  grid-row: 1 / 3;
+}
+
+.control-button {
+  border: 0.25em solid var(--foreground);
+  background-color: transparent;
+  text-transform: uppercase;
+}
+
 #vizzy {
   position: fixed;
   top: 0;
@@ -10,11 +77,4 @@
   width: 100vw;
   height: 100vh;
   z-index: -1;
-}
-h1 {
-  /* mix-blend-mode: difference; */
-  color: #2385ec;
-  font-size: 4vw;
-  text-align: center;
-  font-family: Sigma AF;
 }

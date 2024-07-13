@@ -34,13 +34,16 @@ async function main() {
   const byteBeat = new ByteBeat(audioContext, bbNode, gainNode);
   const vizzy = new Vizzy(analyserNode, document.getElementById("vizzy"));
 
+  window.byteBeat = byteBeat;
+  window.vizzy = vizzy;
+
   document.onclick = () => {
     if (audioContext.state === "suspended") {
       audioContext.resume();
     }
   };
 
-  cycleProgs(byteBeat);
+  // cycleProgs(byteBeat);
 }
 
 function cycleProgs(byteBeat) {
