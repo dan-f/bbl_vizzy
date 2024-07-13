@@ -17,6 +17,7 @@ textarea,
 input,
 button {
   font-family: Sigma AF;
+  margin: unset;
 }
 
 :focus {
