@@ -19,6 +19,13 @@ const progs = [
 ];
 
 async function main() {
+  // This will cause a warning about preventing an AudioContext from starting
+  // automatically. This is related to the auto play policy and is the browser's
+  // way of letting us know that we ought not to try to play audio without the
+  // user's consent. In this specific case the warning is a quirk of the
+  // WebAudio implementation, since creating an `AudioContext` is not the same
+  // thing as playing audio. In fact we don't `resume` the `AudioContext` until
+  // the user initiates, so there's nothing to do here.
   const audioContext = new AudioContext();
   const { bbNode, analyserNode, gainNode } = await createAudioGraph(
     audioContext
@@ -56,7 +63,6 @@ async function createAudioGraph(audioContext) {
   gainNode.connect(audioContext.destination);
 
   analyserNode.fftSize = 2 ** 13;
-  gainNode.gain.setValueAtTime(0.25, 0);
 
   return { bbNode, analyserNode, gainNode };
 }
