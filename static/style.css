@@ -33,7 +33,7 @@ h1 {
 #page {
   height: 100%;
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
   grid-template-columns: 1fr 3fr 1fr;
 }
 
@@ -47,8 +47,8 @@ h1 {
   /* grid container properties */
   display: grid;
   gap: 0.5em;
-  grid-template-rows: 1fr 1fr 1fr;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(6, 1fr);
 }
 
 #program-form {
