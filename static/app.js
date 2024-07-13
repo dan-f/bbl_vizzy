@@ -37,13 +37,26 @@ async function main() {
   window.byteBeat = byteBeat;
   window.vizzy = vizzy;
 
-  document.onclick = () => {
-    if (audioContext.state === "suspended") {
-      audioContext.resume();
+  document.getElementById("ctrl-toggle-playstate").onclick = () => {
+    byteBeat.togglePlaying();
+  };
+
+  const programForm = document.getElementById("program-form");
+
+  programForm.onsubmit = (event) => {
+    event.preventDefault();
+    const programText = document.getElementById("program-editor").value;
+    byteBeat.setProgram(programText);
+    if (!byteBeat.playing) {
+      byteBeat.togglePlaying();
     }
   };
 
-  // cycleProgs(byteBeat);
+  document.getElementById("program-editor").onkeydown = (event) => {
+    if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+      programForm.requestSubmit();
+    }
+  };
 }
 
 function cycleProgs(byteBeat) {

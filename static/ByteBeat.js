@@ -5,8 +5,16 @@ export class ByteBeat {
     this.gainNode = gainNode;
   }
 
+  get playing() {
+    return this.audioContext.state === "running";
+  }
+
+  togglePlaying() {
+    return this.playing ? this._pause() : this._play();
+  }
+
   setProgram(progText) {
-    const fnText = this.validateProgram(progText);
+    const fnText = this._validateProgram(progText);
     this.bbNode.port.postMessage({ type: "updateFn", body: fnText });
   }
 
@@ -20,10 +28,18 @@ export class ByteBeat {
     this.gainNode.gain.setValueAtTime(gain, this.audioContext.currentTime);
   }
 
-  validateProgram(progText) {
+  _validateProgram(progText) {
     // TODO validate tokens
     const fnText = `(t) => ${progText}`;
     eval(fnText);
     return fnText;
+  }
+
+  _play() {
+    this.audioContext.resume();
+  }
+
+  _pause() {
+    this.audioContext.suspend();
   }
 }

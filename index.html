@@ -11,12 +11,15 @@
     <!-- <h1>BBL_VIZZY</h1> -->
     <div id="page">
       <div id="app">
-        <textarea id="program-editor">((t >> 10) & 42) * t</textarea>
-        <button id="control-back" disabled class="control-button">back</button>
-        <button id="toggle-play" class="control-button">play</button>
-        <button id="control-forward" disabled class="control-button">
-          forward
+        <form id="program-form">
+          <textarea id="program-editor">((t >> 10) & 42) * t</textarea>
+          <input type="submit" value="run" id="ctrl-send" class="ctrl-button" />
+        </form>
+        <button id="ctrl-back" disabled class="ctrl-button">back</button>
+        <button id="ctrl-toggle-playstate" class="ctrl-button">
+          play / pause
         </button>
+        <button id="ctrl-forward" disabled class="ctrl-button">forward</button>
       </div>
     </div>
 
