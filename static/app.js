@@ -48,12 +48,13 @@ export class App {
 
     const bbNode = new AudioWorkletNode(audioCtx, "BbProcessor");
     const gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
     const analyserNode = audioCtx.createAnalyser();
-    bbNode.connect(gainNode);
-    gainNode.connect(analyserNode);
-    gainNode.connect(audioCtx.destination);
-
     analyserNode.fftSize = 2 ** 13;
+
+    bbNode.connect(gainNode);
+    bbNode.connect(analyserNode);
+    gainNode.connect(audioCtx.destination);
 
     return { bbNode, analyserNode, gainNode };
   }
