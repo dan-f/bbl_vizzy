@@ -11,7 +11,13 @@ export class App {
   }
 
   bootstrap() {
-    this.elements.togglePlaystate.onclick = () => {
+    window.onkeydown = (event) => {
+      if (event.code === "Space" && event.target === document.body) {
+        this.byteBeat.togglePlaying();
+      }
+    };
+
+    this.elements.playstateToggle.onclick = () => {
       this.byteBeat.togglePlaying();
     };
 
@@ -25,7 +31,7 @@ export class App {
     };
 
     this.elements.programEditor.onkeydown = (event) => {
-      if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+      if (event.code === "Enter" && (event.ctrlKey || event.metaKey)) {
         programForm.requestSubmit();
       }
     };

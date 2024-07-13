@@ -4,7 +4,7 @@ import { App } from "./app.js";
   const elements = {
     programForm: document.getElementById("program-form"),
     programEditor: document.getElementById("program-editor"),
-    togglePlaystate: document.getElementById("ctrl-toggle-playstate"),
+    playstateToggle: document.getElementById("ctrl-toggle-playstate"),
     vizzyCanvas: document.getElementById("vizzy"),
   };
 
