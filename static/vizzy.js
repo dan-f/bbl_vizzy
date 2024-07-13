@@ -8,8 +8,8 @@ export class Vizzy {
 
     this.canvasContext = this.canvas.getContext("2d");
 
-    this._boundDraw = this.draw.bind(this);
-    this._boundDraw();
+    this.draw = this.draw.bind(this);
+    this.draw();
 
     this.w = this.canvas.clientWidth;
     this.h = this.canvas.clientHeight;
@@ -43,6 +43,6 @@ export class Vizzy {
       );
     }
 
-    window.requestAnimationFrame(this._boundDraw);
+    window.requestAnimationFrame(this.draw);
   }
 }
