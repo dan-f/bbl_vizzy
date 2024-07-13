@@ -1,17 +1,11 @@
 export class Vizzy {
-  constructor(audioContext) {
-    this.audioContext = audioContext;
-
-    this.fftSize = 2 ** 13;
-
-    this.analyser = new AnalyserNode(this.audioContext, {
-      fftSize: this.fftSize,
-    });
+  constructor(analyser, canvas) {
+    this.analyser = analyser;
+    this.canvas = canvas;
 
     this.frequencyData = new Uint8Array(this.analyser.frequencyBinCount);
-    this.timeData = new Uint8Array(this.fftSize);
+    this.timeData = new Uint8Array(this.analyser.fftSize);
 
-    this.canvas = document.getElementById("vizzy");
     this.canvasContext = this.canvas.getContext("2d");
 
     this._boundDraw = this.draw.bind(this);

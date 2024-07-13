@@ -1,7 +1,6 @@
 import { Vizzy } from "./vizzy.js";
-const AudioContext = window.AudioContext || webkitAudioContext;
 
-let workletNode;
+const AudioContext = window.AudioContext || webkitAudioContext;
 
 const progs = [
   "t * ((t>>12|t>>8)&63&t>>4)",
@@ -18,35 +17,47 @@ const progs = [
   "(t|(t>>9|t>>7))*t&(t>>11|t>>9)",
 ];
 
-let didLoad = new Promise((resolve, reject) => {
-  document.onclick = async () => {
-    const audioContext = new AudioContext();
+async function main() {
+  const audioContext = new AudioContext();
+  const { bbNode, analyserNode, gainNode } = await createAudioGraph(
+    audioContext
+  );
+
+  const vizzy = new Vizzy(analyserNode, document.getElementById("vizzy"));
+  bbNode.connect(vizzy.inlet);
+
+  document.onclick = () => {
     if (audioContext.state === "suspended") {
-      await audioContext.resume();
+      audioContext.resume();
     }
-
-    await audioContext.audioWorklet.addModule("static/bb.processor.js");
-
-    workletNode = new AudioWorkletNode(audioContext, "BbProcessor");
-    const vizzy = new Vizzy(audioContext);
-    workletNode.connect(vizzy.inlet);
-    workletNode.connect(audioContext.destination);
-
-    document.onmousemove = (event) => {
-      const sr = event.clientX / window.innerWidth;
-      const bd = event.clientY / window.innerHeight;
-      workletNode.parameters.get("sampleRate").setValueAtTime(sr, 0);
-      workletNode.parameters.get("bitDepth").setValueAtTime(bd, 0);
-    };
-
-    resolve();
   };
-});
 
-didLoad.then(() => {
+  cycleProgs(bbNode);
+}
+
+function cycleProgs(bbNode) {
   let i = 0;
+  bbNode.port.postMessage(`(t) => ${progs[i]}`);
   setInterval(() => {
-    workletNode.port.postMessage(`(t) => ${progs[i]}`);
     i = (i + 1) % progs.length;
+    bbNode.port.postMessage(`(t) => ${progs[i]}`);
   }, 2000);
-});
+}
+
+async function createAudioGraph(audioContext) {
+  await audioContext.audioWorklet.addModule("static/bb.processor.js");
+
+  const bbNode = new AudioWorkletNode(audioContext, "BbProcessor");
+  const gainNode = audioContext.createGain();
+  const analyserNode = audioContext.createAnalyser();
+  bbNode.connect(gainNode);
+  gainNode.connect(analyserNode);
+  gainNode.connect(audioContext.destination);
+
+  analyserNode.fftSize = 2 ** 13;
+  gainNode.gain.setValueAtTime(0.25, 0);
+
+  return { bbNode, analyserNode, gainNode };
+}
+
+main();
