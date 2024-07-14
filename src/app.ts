@@ -18,9 +18,15 @@ export class App {
     this.byteBeat = byteBeat;
     this.vizzy = vizzy;
     this.elements = elements;
+
+    this._updatePlaystateToggleText =
+      this._updatePlaystateToggleText.bind(this);
   }
 
   bootstrap() {
+    this._updatePlaystateToggleText(this.byteBeat.playing);
+    this.byteBeat.subscribeToPlaystate(this._updatePlaystateToggleText);
+
     window.onkeydown = (event) => {
       if (event.code === "Space" && event.target === document.body) {
         this.byteBeat.togglePlaying();
@@ -45,6 +51,10 @@ export class App {
         this.elements.programForm.requestSubmit();
       }
     };
+  }
+
+  _updatePlaystateToggleText(playing: boolean) {
+    this.elements.playstateToggle.innerText = playing ? "pause" : "play";
   }
 
   static async create(elements: AppElements): Promise<App> {

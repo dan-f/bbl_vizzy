@@ -38,6 +38,12 @@ export class ByteBeat {
     this.gainNode.gain.setValueAtTime(gain, this.audioCtx.currentTime);
   }
 
+  subscribeToPlaystate(cb: (playing: boolean) => void) {
+    return this.audioCtx.addEventListener("statechange", () =>
+      cb(this.playing),
+    );
+  }
+
   _validateProgram(progText: string): string {
     // TODO validate tokens
     const fnText = `(t) => ${progText}`;
