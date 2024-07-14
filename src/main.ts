@@ -1,12 +1,26 @@
 import { App, AppElements } from "./app";
 
 (async () => {
-  const elements = {
-    programForm: document.getElementById("program-form"),
-    programEditor: document.getElementById("program-editor"),
-    playstateToggle: document.getElementById("ctrl-toggle-playstate"),
-    vizzyCanvas: document.getElementById("vizzy"),
-  } as AppElements;
+  const elements: AppElements = {
+    programForm: document.getElementById("program-form")! as HTMLFormElement,
+    programEditor: document.getElementById(
+      "program-editor",
+    )! as HTMLTextAreaElement,
+    playstateToggle: document.getElementById(
+      "ctrl-toggle-playstate",
+    )! as HTMLButtonElement,
+    vizzyCanvas: document.getElementById("vizzy")! as HTMLCanvasElement,
+    bitDepth: [
+      ...(document.querySelectorAll(
+        'input[name="depth"]',
+      )! as NodeListOf<HTMLInputElement>),
+    ].map((el) => [parseInt(el.value), el]),
+    sampleRate: [
+      ...(document.querySelectorAll(
+        'input[name="rate"]',
+      )! as NodeListOf<HTMLInputElement>),
+    ].map((el) => [parseInt(el.value), el]),
+  };
 
   const app = await App.create(elements);
   app.bootstrap();

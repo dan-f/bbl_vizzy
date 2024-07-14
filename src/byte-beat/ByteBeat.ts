@@ -2,6 +2,7 @@ import { EventEmitter, Subscription, Unsubscribe } from "../EventEmitter";
 import { BbMessage, BbMessageType } from "./message";
 
 export interface State {
+  programText: string;
   playing: boolean;
   gain: number;
   bitDepth: number;
@@ -13,6 +14,7 @@ export interface StateChange {
 }
 
 export class ByteBeat {
+  programText: string = "((t >> 10) & 42) * t";
   audioCtx: AudioContext;
   bbNode: AudioWorkletNode;
   gainNode: GainNode;
@@ -35,6 +37,7 @@ export class ByteBeat {
 
   get state(): State {
     return {
+      programText: this.programText,
       playing: this.audioCtx.state === "running",
       gain: this.gainNode.gain.value,
       bitDepth: this.bbNode.parameters.get("bitDepth")!.value,
@@ -42,13 +45,19 @@ export class ByteBeat {
     };
   }
 
+  subscribeToStateChange(s: Subscription<StateChange>): Unsubscribe {
+    return this.eventEmitter.subscribe(s);
+  }
+
   togglePlaying() {
     return this.state.playing ? this._pause() : this._play();
   }
 
-  setProgram(progText: string) {
-    const fnText = this._validateProgram(progText);
+  evalProgram(text: string) {
+    const { programText, fnText } = this._validateProgram(text);
+    this.programText = programText;
     this._sendMessage({ type: BbMessageType.UpdateFn, body: fnText });
+    this._emitStateEvent();
   }
 
   setGain(gain: number) {
@@ -62,15 +71,22 @@ export class ByteBeat {
     this._emitStateEvent();
   }
 
-  subscribeToStateChange(s: Subscription<StateChange>): Unsubscribe {
-    return this.eventEmitter.subscribe(s);
+  setBitDepth(bitDepth: number) {
+    this.bbNode.parameters.get("bitDepth")!.value = bitDepth;
+    this._emitStateEvent();
   }
 
-  _validateProgram(progText: string): string {
+  setSampleRate(sampleRate: number) {
+    this.bbNode.parameters.get("sampleRate")!.value = sampleRate;
+    this._emitStateEvent();
+  }
+
+  _validateProgram(programText: string): ValidatedProgram {
     // TODO validate tokens
-    const fnText = `(t) => ${progText}`;
+    programText = programText.trim();
+    const fnText = `(t) => ${programText}`;
     eval(fnText);
-    return fnText;
+    return { programText, fnText };
   }
 
   _play() {
@@ -88,4 +104,9 @@ export class ByteBeat {
   _emitStateEvent() {
     this.eventEmitter.emit({ state: this.state });
   }
+}
+
+interface ValidatedProgram {
+  programText: string;
+  fnText: string;
 }

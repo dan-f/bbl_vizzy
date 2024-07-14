@@ -6,16 +6,19 @@
 
 import { BbMessage, BbMessageType } from "./message";
 
+const DEFAULT_BIT_DEPTH = 8;
+const DEFAULT_SAMPLE_RATE = 10000;
+
 class ByteBeatProcessor extends AudioWorkletProcessor {
   globalSample: number;
-  cachedValue: number;
+  currentSample: number;
   counter: number;
   fn: (t: number) => number;
 
   constructor() {
     super();
     this.globalSample = 0;
-    this.cachedValue = 0;
+    this.currentSample = 0;
     this.counter = 0;
     this.fn = () => 0;
 
@@ -28,16 +31,16 @@ class ByteBeatProcessor extends AudioWorkletProcessor {
     return [
       {
         name: "bitDepth",
-        defaultValue: 0.75,
-        minValue: 0, // 1
-        maxValue: 1, // 16
+        defaultValue: DEFAULT_BIT_DEPTH,
+        minValue: 1,
+        maxValue: 16,
         automationRate: "k-rate",
       },
       {
         name: "sampleRate",
-        defaultValue: 0.75,
-        minValue: 0, // 1000
-        maxValue: 1, // 20000
+        defaultValue: DEFAULT_SAMPLE_RATE,
+        minValue: 1000,
+        maxValue: 20000,
         automationRate: "k-rate",
       },
     ];
@@ -53,32 +56,22 @@ class ByteBeatProcessor extends AudioWorkletProcessor {
         const t = this.globalSample;
         this.globalSample += 1;
 
-        const bdDefault = 8;
-        const bdMin = 1;
-        const bdMax = 16;
-        const bdParam =
-          parameters["bitDepth"][0] ?? (bdDefault - bdMin) / (bdMax - bdMin);
-        const bitDepth = Math.trunc(bdParam * 15) + 1;
-
-        const srDefault = 8000;
-        const srMin = 1000;
-        const srMax = 20000;
-        const srParam =
-          parameters["sampleRate"][0] ?? (srDefault - srMin) / (srMax - srMin);
-        const sRate = srParam * 19000 + 1000;
+        const bitDepth = parameters["bitDepth"][0] ?? DEFAULT_BIT_DEPTH;
+        const sRate = parameters["sampleRate"][0] ?? DEFAULT_SAMPLE_RATE;
 
         const mask = (1 << bitDepth) - 1;
         let out = this.fn(t) & mask;
         out /= mask;
         out *= 2;
         out -= 1;
+        this.currentSample = out;
+
         const remainder = 1.0 - this.counter;
         this.counter = sampleRate / sRate + remainder;
-        this.cachedValue = out;
       }
-      this.counter--;
 
-      outputs[0][0][s] = Math.tanh(50 * this.cachedValue);
+      this.counter--;
+      outputs[0][0][s] = Math.tanh(50 * this.currentSample);
     }
 
     return true;

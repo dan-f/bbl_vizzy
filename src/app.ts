@@ -6,6 +6,8 @@ export interface AppElements {
   programForm: HTMLFormElement;
   programEditor: HTMLTextAreaElement;
   playstateToggle: HTMLButtonElement;
+  bitDepth: [number, HTMLInputElement][];
+  sampleRate: [number, HTMLInputElement][];
   vizzyCanvas: HTMLCanvasElement;
 }
 
@@ -37,7 +39,7 @@ export class App {
     this.elements.programForm.onsubmit = (event) => {
       event.preventDefault();
       const programText = this.elements.programEditor.value;
-      this.byteBeat.setProgram(programText);
+      this.byteBeat.evalProgram(programText);
       if (!this.byteBeat.state.playing) {
         this.byteBeat.togglePlaying();
       }
@@ -48,10 +50,41 @@ export class App {
         this.elements.programForm.requestSubmit();
       }
     };
+
+    for (const [_, input] of this.elements.bitDepth) {
+      input.onchange = () => {
+        if (input.checked) {
+          this.byteBeat.setBitDepth(parseInt(input.value));
+        }
+      };
+    }
+
+    for (const [_, input] of this.elements.sampleRate) {
+      input.onchange = () => {
+        if (input.checked) {
+          this.byteBeat.setSampleRate(parseInt(input.value));
+        }
+      };
+    }
   }
 
   _updateUi(state: ByteBeatState) {
+    this.elements.programEditor.innerText = state.programText;
     this.elements.playstateToggle.innerText = state.playing ? "pause" : "play";
+
+    const bdInput = this.elements.bitDepth.find(
+      ([val, _]) => val === state.bitDepth,
+    )?.[1];
+    if (bdInput) {
+      bdInput.checked = true;
+    }
+
+    const srInput = this.elements.sampleRate.find(
+      ([val, _]) => val === state.sampleRate,
+    )?.[1];
+    if (srInput) {
+      srInput.checked = true;
+    }
   }
 
   static async create(elements: AppElements): Promise<App> {
