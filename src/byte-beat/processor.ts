@@ -1,12 +1,25 @@
+/**
+ * Note that this module cannot be imported directly by standard ES modules due
+ * to the reference to `AudioWorkletProcessor`, which is only defined in the
+ * `AudioWorkletGlobalScope`.
+ */
+
+import { BbMessage, BbMessageType } from "./message";
+
 class BbProcessor extends AudioWorkletProcessor {
+  globalSample: number;
+  cachedValue: number;
+  counter: number;
+  fn: (t: number) => number;
+
   constructor() {
     super();
     this.globalSample = 0;
     this.cachedValue = 0;
     this.counter = 0;
-    this.fn = (t) => 0;
+    this.fn = (_t) => 0;
 
-    this.port.onmessage = (event) => {
+    this.port.onmessage = (event: MessageEvent<BbMessage>) => {
       this.processMessage(event.data);
     };
   }
@@ -30,7 +43,11 @@ class BbProcessor extends AudioWorkletProcessor {
     ];
   }
 
-  process(inputs, outputs, parameters) {
+  process(
+    _inputs: Float32Array[][],
+    outputs: Float32Array[][],
+    parameters: Record<string, Float32Array>,
+  ): boolean {
     for (let s = 0; s < outputs[0][0].length; s++) {
       if (this.counter <= 0) {
         const t = this.globalSample;
@@ -41,7 +58,7 @@ class BbProcessor extends AudioWorkletProcessor {
         let bdMax = 16;
         let bdParam =
           parameters["bitDepth"][0] ?? (bdDefault - bdMin) / (bdMax - bdMin);
-        const bitDepth = parseInt(bdParam * 15) + 1;
+        const bitDepth = Math.trunc(bdParam * 15) + 1;
 
         let srDefault = 8000;
         let srMin = 1000;
@@ -63,13 +80,16 @@ class BbProcessor extends AudioWorkletProcessor {
 
       outputs[0][0][s] = Math.tanh(50 * this.cachedValue);
     }
+
     return true;
   }
 
-  processMessage(message) {
+  processMessage(message: BbMessage) {
     switch (message.type) {
-      case "updateFn": {
+      case BbMessageType.UpdateFn: {
         this.fn = eval(message.body);
+        console.debug("updated fn", this.fn);
+        break;
       }
     }
   }

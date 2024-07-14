@@ -1,29 +1,27 @@
 export class Vizzy {
-  constructor(analyser, canvas) {
-    this.analyser = analyser;
-    this.canvas = canvas;
+  analyser: AnalyserNode;
+  frequencyData: Uint8Array;
+  timeData: Uint8Array;
+  canvas: HTMLCanvasElement;
+  canvasContext: CanvasRenderingContext2D;
+  pixelSize: number;
 
+  constructor(analyser: AnalyserNode, canvas: HTMLCanvasElement) {
+    this.analyser = analyser;
     this.frequencyData = new Uint8Array(this.analyser.frequencyBinCount);
     this.timeData = new Uint8Array(this.analyser.fftSize);
 
-    this.canvasContext = this.canvas.getContext("2d");
-
-    this.draw = this.draw.bind(this);
-    this.draw();
-
-    this.w = this.canvas.clientWidth;
-    this.h = this.canvas.clientHeight;
-    this.canvas.width = this.w;
-    this.canvas.height = this.h;
+    this.canvas = canvas;
+    this.canvasContext = this.canvas.getContext("2d")!;
 
     this.pixelSize = 10;
 
-    window.onresize = () => {
-      this.w = this.canvas.clientWidth;
-      this.h = this.canvas.clientHeight;
-      this.canvas.width = this.w;
-      this.canvas.height = this.h;
-    };
+    this._updateCanvasDimensions = this._updateCanvasDimensions.bind(this);
+    window.addEventListener("resize", this._updateCanvasDimensions);
+    this._updateCanvasDimensions();
+
+    this.draw = this.draw.bind(this);
+    this.draw();
   }
 
   draw() {
@@ -39,10 +37,23 @@ export class Vizzy {
         x - this.pixelSize / 2,
         y - this.pixelSize / 2,
         this.pixelSize,
-        this.pixelSize
+        this.pixelSize,
       );
     }
 
     window.requestAnimationFrame(this.draw);
+  }
+
+  get w(): number {
+    return this.canvas.clientWidth;
+  }
+
+  get h(): number {
+    return this.canvas.clientHeight;
+  }
+
+  _updateCanvasDimensions() {
+    this.canvas.width = this.w;
+    this.canvas.height = this.h;
   }
 }

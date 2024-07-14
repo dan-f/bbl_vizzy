@@ -1,0 +1,23 @@
+{
+  "name": "bbl-vizzy-v2",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "fmt:write": "prettier . --write",
+    "fmt:check": "prettier . --check",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "vite": "^5.3.1"
+  },
+  "dependencies": {
+    "@types/audioworklet": "^0.0.57",
+    "husky": "^9.0.11",
+    "prettier": "^3.3.3"
+  }
+}

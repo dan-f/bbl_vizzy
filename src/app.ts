@@ -1,10 +1,20 @@
-import { ByteBeat } from "./ByteBeat.js";
-import { Vizzy } from "./vizzy.js";
+import { createAudioGraph } from "./audio-graph";
+import { ByteBeat } from "./byte-beat";
+import { Vizzy } from "./vizzy";
 
-const AudioContext = window.AudioContext || webkitAudioContext;
+export interface AppElements {
+  programForm: HTMLFormElement;
+  programEditor: HTMLTextAreaElement;
+  playstateToggle: HTMLButtonElement;
+  vizzyCanvas: HTMLCanvasElement;
+}
 
 export class App {
-  constructor(byteBeat, vizzy, elements) {
+  byteBeat: ByteBeat;
+  vizzy: Vizzy;
+  elements: AppElements;
+
+  constructor(byteBeat: ByteBeat, vizzy: Vizzy, elements: AppElements) {
     this.byteBeat = byteBeat;
     this.vizzy = vizzy;
     this.elements = elements;
@@ -32,36 +42,18 @@ export class App {
 
     this.elements.programEditor.onkeydown = (event) => {
       if (event.code === "Enter" && (event.ctrlKey || event.metaKey)) {
-        programForm.requestSubmit();
+        this.elements.programForm.requestSubmit();
       }
     };
   }
 
-  static async create(elements) {
+  static async create(elements: AppElements): Promise<App> {
     const audioCtx = new AudioContext();
-    const { bbNode, analyserNode, gainNode } = await this.createAudioGraph(
-      audioCtx
-    );
+    const { bbNode, analyserNode, gainNode } = await createAudioGraph(audioCtx);
 
     const byteBeat = new ByteBeat(audioCtx, bbNode, gainNode);
     const vizzy = new Vizzy(analyserNode, elements.vizzyCanvas);
 
     return new App(byteBeat, vizzy, elements);
-  }
-
-  static async createAudioGraph(audioCtx) {
-    await audioCtx.audioWorklet.addModule("static/bb.processor.js");
-
-    const bbNode = new AudioWorkletNode(audioCtx, "BbProcessor");
-    const gainNode = audioCtx.createGain();
-    gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
-    const analyserNode = audioCtx.createAnalyser();
-    analyserNode.fftSize = 2 ** 13;
-
-    bbNode.connect(gainNode);
-    bbNode.connect(analyserNode);
-    gainNode.connect(audioCtx.destination);
-
-    return { bbNode, analyserNode, gainNode };
   }
 }

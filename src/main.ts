@@ -1,4 +1,4 @@
-import { App } from "./app.js";
+import { App, AppElements } from "./app";
 
 (async () => {
   const elements = {
@@ -6,7 +6,7 @@ import { App } from "./app.js";
     programEditor: document.getElementById("program-editor"),
     playstateToggle: document.getElementById("ctrl-toggle-playstate"),
     vizzyCanvas: document.getElementById("vizzy"),
-  };
+  } as AppElements;
 
   const app = await App.create(elements);
   app.bootstrap();
