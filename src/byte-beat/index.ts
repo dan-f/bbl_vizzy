@@ -1,2 +1,3 @@
-export * from "./ByteBeat";
-export * from "./message";
+export { ByteBeat } from "./ByteBeat";
+export { validateProgram } from "./program";
+export type { ValidatedProgram } from "./program";

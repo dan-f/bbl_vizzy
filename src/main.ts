@@ -6,6 +6,7 @@ import { App, AppElements } from "./app";
     programEditor: document.getElementById(
       "program-editor",
     )! as HTMLTextAreaElement,
+    evalButton: document.getElementById("ctrl-eval")! as HTMLInputElement,
     playstateToggle: document.getElementById(
       "ctrl-toggle-playstate",
     )! as HTMLButtonElement,

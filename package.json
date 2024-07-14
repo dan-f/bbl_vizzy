@@ -16,14 +16,14 @@
     "@eslint/js": "^9.7.0",
     "eslint": "^9.7.0",
     "globals": "^15.8.0",
+    "husky": "^9.0.11",
+    "prettier": "^3.3.3",
     "prettier-plugin-organize-imports": "^4.0.0",
     "typescript": "^5.2.2",
     "typescript-eslint": "^8.0.0-alpha.10",
     "vite": "^5.3.1"
   },
   "dependencies": {
-    "@types/audioworklet": "^0.0.57",
-    "husky": "^9.0.11",
-    "prettier": "^3.3.3"
+    "@types/audioworklet": "^0.0.57"
   }
 }

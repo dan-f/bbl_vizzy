@@ -1,6 +1,6 @@
 import byteBeatProcessorUrl from "./byte-beat/processor?url";
 
-export interface AudioGraph {
+interface AudioGraph {
   bbNode: AudioWorkletNode;
   analyserNode: AnalyserNode;
   gainNode: GainNode;
