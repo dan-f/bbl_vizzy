@@ -88,7 +88,6 @@ class BbProcessor extends AudioWorkletProcessor {
     switch (message.type) {
       case BbMessageType.UpdateFn: {
         this.fn = eval(message.body);
-        console.debug("updated fn", this.fn);
         break;
       }
     }
