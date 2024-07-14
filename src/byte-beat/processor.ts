@@ -6,7 +6,7 @@
 
 import { BbMessage, BbMessageType } from "./message";
 
-class BbProcessor extends AudioWorkletProcessor {
+class ByteBeatProcessor extends AudioWorkletProcessor {
   globalSample: number;
   cachedValue: number;
   counter: number;
@@ -94,4 +94,4 @@ class BbProcessor extends AudioWorkletProcessor {
   }
 }
 
-registerProcessor("BbProcessor", BbProcessor);
+registerProcessor("ByteBeatProcessor", ByteBeatProcessor);

@@ -1,2 +1,2 @@
-export * from "./byte-beat";
+export * from "./ByteBeat";
 export * from "./message";

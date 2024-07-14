@@ -1,4 +1,4 @@
-import bbProcessorUrl from "./byte-beat/processor?url";
+import byteBeatProcessorUrl from "./byte-beat/processor?url";
 
 export interface AudioGraph {
   bbNode: AudioWorkletNode;
@@ -9,9 +9,9 @@ export interface AudioGraph {
 export async function createAudioGraph(
   audioCtx: AudioContext,
 ): Promise<AudioGraph> {
-  await audioCtx.audioWorklet.addModule(bbProcessorUrl);
+  await audioCtx.audioWorklet.addModule(byteBeatProcessorUrl);
 
-  const bbNode = new AudioWorkletNode(audioCtx, "BbProcessor");
+  const bbNode = new AudioWorkletNode(audioCtx, "ByteBeatProcessor");
   const gainNode = audioCtx.createGain();
   gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
   const analyserNode = audioCtx.createAnalyser();

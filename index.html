@@ -9,15 +9,36 @@
 
   <body>
     <div id="page">
-      <div id="app">
-        <form id="program-form">
-          <textarea id="program-editor">((t >> 10) & 42) * t</textarea>
-          <input type="submit" value="run" id="ctrl-send" class="ctrl-button" />
-        </form>
-        <button id="ctrl-back" disabled class="ctrl-button">back</button>
+      <form id="program-form">
+        <textarea id="program-editor">((t >> 10) & 42) * t</textarea>
+        <fieldset id="depth-ctrl">
+          <legend>depth</legend>
+          <label class="radio-option"
+            ><span>4</span><input type="radio" name="depth" value="4"
+          /></label>
+          <label class="radio-option"
+            ><span>8</span><input type="radio" name="depth" value="8" checked
+          /></label>
+          <label class="radio-option"
+            ><span>16</span><input type="radio" name="depth" value="16"
+          /></label>
+        </fieldset>
+        <fieldset id="rate-ctrl">
+          <legend>rate</legend>
+          <label class="radio-option"
+            ><span>2k</span><input type="radio" name="rate" value="2000"
+          /></label>
+          <label class="radio-option"
+            ><span>8k</span>
+            <input type="radio" name="rate" value="8000" checked
+          /></label>
+          <label class="radio-option"
+            ><span>20k</span><input type="radio" name="rate" value="20000"
+          /></label>
+        </fieldset>
+        <input type="submit" value="eval" id="ctrl-eval" class="ctrl-button" />
         <button id="ctrl-toggle-playstate" class="ctrl-button">play</button>
-        <button id="ctrl-forward" disabled class="ctrl-button">forward</button>
-      </div>
+      </form>
     </div>
 
     <canvas id="vizzy"></canvas>

@@ -1,6 +1,6 @@
 import { createAudioGraph } from "./audio-graph";
 import { ByteBeat } from "./byte-beat";
-import { Vizzy } from "./vizzy";
+import { Vizzy } from "./Vizzy";
 
 export interface AppElements {
   programForm: HTMLFormElement;
