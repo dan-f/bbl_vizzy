@@ -1,5 +1,5 @@
 {
-  "name": "bbl-vizzy-v2",
+  "name": "bbl-vizzy",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,7 +12,11 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@eslint/js": "^9.7.0",
+    "eslint": "^9.7.0",
+    "globals": "^15.8.0",
     "typescript": "^5.2.2",
+    "typescript-eslint": "^8.0.0-alpha.10",
     "vite": "^5.3.1"
   },
   "dependencies": {

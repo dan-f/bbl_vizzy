@@ -17,7 +17,7 @@ class BbProcessor extends AudioWorkletProcessor {
     this.globalSample = 0;
     this.cachedValue = 0;
     this.counter = 0;
-    this.fn = (_t) => 0;
+    this.fn = () => 0;
 
     this.port.onmessage = (event: MessageEvent<BbMessage>) => {
       this.processMessage(event.data);
@@ -53,17 +53,17 @@ class BbProcessor extends AudioWorkletProcessor {
         const t = this.globalSample;
         this.globalSample += 1;
 
-        let bdDefault = 8;
-        let bdMin = 1;
-        let bdMax = 16;
-        let bdParam =
+        const bdDefault = 8;
+        const bdMin = 1;
+        const bdMax = 16;
+        const bdParam =
           parameters["bitDepth"][0] ?? (bdDefault - bdMin) / (bdMax - bdMin);
         const bitDepth = Math.trunc(bdParam * 15) + 1;
 
-        let srDefault = 8000;
-        let srMin = 1000;
-        let srMax = 20000;
-        let srParam =
+        const srDefault = 8000;
+        const srMin = 1000;
+        const srMax = 20000;
+        const srParam =
           parameters["sampleRate"][0] ?? (srDefault - srMin) / (srMax - srMin);
         const sRate = srParam * 19000 + 1000;
 
@@ -72,7 +72,7 @@ class BbProcessor extends AudioWorkletProcessor {
         out /= mask;
         out *= 2;
         out -= 1;
-        let remainder = 1.0 - this.counter;
+        const remainder = 1.0 - this.counter;
         this.counter = sampleRate / sRate + remainder;
         this.cachedValue = out;
       }

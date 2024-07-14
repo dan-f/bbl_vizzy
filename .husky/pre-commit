@@ -1,1 +1,1 @@
-npm run fmt:check
+npx eslint && npm run fmt:check
