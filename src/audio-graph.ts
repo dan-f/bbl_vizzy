@@ -13,7 +13,7 @@ export async function createAudioGraph(
 
   const bbNode = new AudioWorkletNode(audioCtx, "ByteBeatProcessor");
   const gainNode = audioCtx.createGain();
-  gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+  gainNode.gain.value = 0.15;
   const analyserNode = audioCtx.createAnalyser();
   analyserNode.fftSize = 2 ** 13;
 

@@ -1,5 +1,5 @@
 import { createAudioGraph } from "./audio-graph";
-import { ByteBeat } from "./byte-beat";
+import { ByteBeat, State as ByteBeatState } from "./byte-beat";
 import { Vizzy } from "./Vizzy";
 
 export interface AppElements {
@@ -18,14 +18,11 @@ export class App {
     this.byteBeat = byteBeat;
     this.vizzy = vizzy;
     this.elements = elements;
-
-    this._updatePlaystateToggleText =
-      this._updatePlaystateToggleText.bind(this);
   }
 
   bootstrap() {
-    this._updatePlaystateToggleText(this.byteBeat.playing);
-    this.byteBeat.subscribeToPlaystate(this._updatePlaystateToggleText);
+    this._updateUi(this.byteBeat.state);
+    this.byteBeat.subscribeToStateChange(({ state }) => this._updateUi(state));
 
     window.onkeydown = (event) => {
       if (event.code === "Space" && event.target === document.body) {
@@ -41,7 +38,7 @@ export class App {
       event.preventDefault();
       const programText = this.elements.programEditor.value;
       this.byteBeat.setProgram(programText);
-      if (!this.byteBeat.playing) {
+      if (!this.byteBeat.state.playing) {
         this.byteBeat.togglePlaying();
       }
     };
@@ -53,8 +50,8 @@ export class App {
     };
   }
 
-  _updatePlaystateToggleText(playing: boolean) {
-    this.elements.playstateToggle.innerText = playing ? "pause" : "play";
+  _updateUi(state: ByteBeatState) {
+    this.elements.playstateToggle.innerText = state.playing ? "pause" : "play";
   }
 
   static async create(elements: AppElements): Promise<App> {

@@ -10,7 +10,6 @@
   <body>
     <div id="page">
       <form id="program-form">
-        <textarea id="program-editor">((t >> 10) & 42) * t</textarea>
         <fieldset id="depth-ctrl">
           <legend>depth</legend>
           <label class="radio-option"
@@ -36,6 +35,7 @@
             ><span>20k</span><input type="radio" name="rate" value="20000"
           /></label>
         </fieldset>
+        <textarea id="program-editor">((t >> 10) & 42) * t</textarea>
         <input type="submit" value="eval" id="ctrl-eval" class="ctrl-button" />
         <button id="ctrl-toggle-playstate" class="ctrl-button">play</button>
       </form>
