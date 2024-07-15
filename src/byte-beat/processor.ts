@@ -71,7 +71,7 @@ class ByteBeatProcessor extends AudioWorkletProcessor {
       }
 
       this.counter--;
-      outputs[0][0][s] = Math.tanh(50 * this.currentSample);
+      outputs[0][0][s] = this.currentSample;
     }
 
     return true;
