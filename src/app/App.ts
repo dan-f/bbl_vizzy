@@ -1,6 +1,6 @@
 import { createAudioGraph } from "../audio-graph";
 import { ByteBeat, validateProgram } from "../byte-beat";
-import { StateManager } from "../lib";
+import { b64Encode, StateManager } from "../lib";
 import { Vizzy } from "../vizzy";
 import { AppElements } from "./AppElements";
 import {
@@ -35,7 +35,7 @@ export class App {
 
   private applyState(state: Partial<AppState>, initial: boolean = false) {
     this.updateBb(state, initial);
-    this.updateUi(state);
+    this.updateUi(state, initial);
   }
 
   private updateBb(state: Partial<AppState>, initial: boolean = false) {
@@ -61,7 +61,7 @@ export class App {
     }
   }
 
-  private updateUi(state: Partial<AppState>) {
+  private updateUi(state: Partial<AppState>, initial: boolean = false) {
     if (state.playing != null) {
       this.elements.playstateToggle.innerText = state.playing
         ? "pause"
@@ -86,6 +86,13 @@ export class App {
       if (srInput) {
         srInput.checked = true;
       }
+    }
+
+    if (
+      !initial &&
+      ("program" in state || "bitDepth" in state || "sampleRate" in state)
+    ) {
+      history.pushState(this.state, "", `#${this.encodeState()}`);
     }
   }
 
@@ -150,6 +157,14 @@ export class App {
 
   private get state(): AppState {
     return this.stateMgr.state;
+  }
+
+  private encodeState(): string {
+    return b64Encode(JSON.stringify(this.state));
+  }
+
+  private decodeState(encoded: string): string {
+    return b64Encode(JSON.parse(encoded));
   }
 
   static async create(elements: AppElements): Promise<App> {
