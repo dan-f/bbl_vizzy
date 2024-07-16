@@ -8,12 +8,29 @@ export interface AppState {
   sampleRate: number;
 }
 
-export const initialState: AppState = {
+export interface ShareState {
+  v: 1;
+  program: ValidatedProgram;
+  bitDepth: number;
+  sampleRate: number;
+}
+
+const ShareStateVersion = 1;
+
+export const InitialState: AppState = {
   playing: false,
   gain: 0.15,
   bitDepth: 8,
-  sampleRate: 10000,
+  sampleRate: 8000,
 };
+
+export function getShareState(state: AppState): ShareState | undefined {
+  if (!state.program) {
+    return;
+  }
+  const { program, bitDepth, sampleRate } = state;
+  return { v: 1, program, bitDepth, sampleRate };
+}
 
 const mkUpdateField =
   <K extends keyof AppState>(field: K) =>
@@ -45,6 +62,15 @@ export const evalProgram =
     }
 
     return { ...state, program, playing: true };
+  };
+
+export const mergeShareState =
+  (incomingState: ShareState) => (state: AppState) => {
+    if (incomingState.v !== ShareStateVersion) {
+      return state;
+    }
+    const { program, bitDepth, sampleRate } = incomingState;
+    return { ...state, program, bitDepth, sampleRate };
   };
 
 export const updateGain = mkUpdateField("gain");

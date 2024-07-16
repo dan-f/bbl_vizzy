@@ -21,6 +21,7 @@ import { App, AppElements } from "./app";
         'input[name="rate"]',
       )! as NodeListOf<HTMLInputElement>),
     ].map((el) => [parseInt(el.value), el]),
+    shareButton: document.getElementById("share")! as HTMLButtonElement,
   };
 
   const app = await App.create(elements);

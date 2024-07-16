@@ -1,8 +1,10 @@
 import { EventEmitter, Subscription, Unsubscribe } from "./EventEmitter";
 import { Logger } from "./Logger";
 
-interface StateTransition<State> {
-  state: Partial<State>;
+export interface StateTransition<State> {
+  oldState: State;
+  state: State;
+  updated: Partial<State>;
 }
 
 export class StateManager<State extends object> {
@@ -35,7 +37,11 @@ export class StateManager<State extends object> {
       updatedFields,
     });
     this.state = newState;
-    this.eventEmitter.emit({ state: updatedFields });
+    this.eventEmitter.emit({
+      oldState,
+      state: newState,
+      updated: updatedFields,
+    });
   }
 
   // shallow comparison

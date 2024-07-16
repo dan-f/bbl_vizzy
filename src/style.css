@@ -34,7 +34,7 @@ button {
 
 fieldset {
   margin: unset;
-  padding: 0.5em;
+  padding: 0.5rem;
   border: 4px solid var(--border);
 }
 
@@ -45,17 +45,17 @@ input[type="radio"] {
   margin: 0;
   font: inherit;
   color: currentColor;
-  width: 1.15em;
-  height: 1.15em;
-  border: 0.15em solid currentColor;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 0.15rem solid currentColor;
   display: grid;
   place-content: center;
 }
 
 input[type="radio"]::before {
   content: "";
-  width: 0.65em;
-  height: 0.65em;
+  width: 0.65rem;
+  height: 0.65rem;
   transform: scale(0);
   box-shadow: inset 1em 1em var(--type);
 }
@@ -70,30 +70,51 @@ input[type="radio"]:checked::before {
 
 h1 {
   /* mix-blend-mode: difference; */
+  margin: unset;
+  padding: 0.5rem;
   color: var(--type);
   font-size: 4vw;
   text-align: center;
+  grid-row: 1;
+  grid-column: 3 / 7;
+}
+
+.action-link {
+  background-color: unset;
+  border: unset;
+  margin: unset;
+  width: fit-content;
+  height: fit-content;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: var(--type);
+  text-transform: uppercase;
+}
+
+#share {
+  grid-row: 1;
+  grid-column: 8;
+  justify-self: center;
 }
 
 #page {
   height: 100%;
+  padding: 0.5rem;
   display: grid;
+  gap: 0.5rem;
   grid-template-rows: repeat(3, 1fr);
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(8, 1fr);
 }
 
 #program-form {
-  padding: 0.5em;
-
   /* grid item properties */
-  grid-column: 1 / 4;
+  grid-column: 1 / 9;
   grid-row: 3;
 
   /* grid container properties */
   display: grid;
-  gap: 0.5em;
+  grid-template-columns: subgrid;
   grid-template-rows: repeat(2, 1fr);
-  grid-template-columns: repeat(8, 1fr);
   color: var(--type);
 }
 
@@ -118,17 +139,17 @@ fieldset {
   display: grid;
   grid-template-rows: 1fr 1fr;
   grid-template-columns: 1fr;
-  gap: 0.5em;
+  gap: 0.5rem;
   justify-items: center;
 }
 
 #program-editor {
-  margin-top: 0.5em;
+  margin-top: 0.5rem;
   width: 100%;
-  padding: 0.5em;
+  padding: 0.5rem;
   resize: none;
 
-  border: 0.25em solid var(--border);
+  border: 0.25rem solid var(--border);
   color: var(--type);
   background-color: transparent;
 
@@ -144,13 +165,13 @@ fieldset {
 }
 
 #ctrl-eval {
-  margin-top: 0.5em;
+  margin-top: 0.5rem;
   grid-column: 8;
   grid-row: 1;
 }
 
 #ctrl-toggle-playstate {
-  margin-top: 0.5em;
+  margin-top: 0.5rem;
   grid-column: 8;
   grid-row: 2;
 }

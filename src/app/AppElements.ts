@@ -6,4 +6,5 @@ export interface AppElements {
   bitDepth: [number, HTMLInputElement][];
   sampleRate: [number, HTMLInputElement][];
   vizzyCanvas: HTMLCanvasElement;
+  shareButton: HTMLButtonElement;
 }

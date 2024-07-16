@@ -1,12 +1,15 @@
 import { createAudioGraph } from "../audio-graph";
 import { ByteBeat, validateProgram } from "../byte-beat";
-import { b64Encode, StateManager } from "../lib";
+import { b64Decode, b64Encode, StateManager } from "../lib";
 import { Vizzy } from "../vizzy";
 import { AppElements } from "./AppElements";
 import {
   AppState,
   evalProgram,
-  initialState,
+  getShareState,
+  InitialState,
+  mergeShareState,
+  ShareState,
   togglePlaying,
   updateBitDepth,
   updateSampleRate,
@@ -21,56 +24,84 @@ export class App {
   private log = new ConsoleLogger("App");
 
   constructor(byteBeat: ByteBeat, vizzy: Vizzy, elements: AppElements) {
-    this.stateMgr = new StateManager(initialState, this.log);
+    this.stateMgr = new StateManager(App.getInitialState(), this.log);
     this.byteBeat = byteBeat;
     this.vizzy = vizzy;
     this.elements = elements;
   }
 
   bootstrap() {
-    this.applyState(this.stateMgr.state, true);
-    this.stateMgr.subscribe(({ state }) => this.applyState(state));
+    this.handleStateTransition = this.handleStateTransition.bind(this);
+    this.handleStateTransition(undefined, this.state, {});
+    this.stateMgr.subscribe(({ oldState, state, updated }) =>
+      this.handleStateTransition(oldState, state, updated),
+    );
     this.listenForEvents();
   }
 
-  private applyState(state: Partial<AppState>, initial: boolean = false) {
-    this.updateBb(state, initial);
-    this.updateUi(state, initial);
+  private handleStateTransition(
+    oldState: AppState | undefined,
+    state: AppState,
+    updated: Partial<AppState>,
+  ) {
+    this.updateBb(oldState, state, updated);
+    this.updateUi(oldState, state, updated);
   }
 
-  private updateBb(state: Partial<AppState>, initial: boolean = false) {
-    if (!initial && state.program != null) {
-      this.byteBeat.evalProgram(state.program);
+  private updateBb(
+    oldState: AppState | undefined,
+    state: AppState,
+    updated: Partial<AppState>,
+  ) {
+    if (oldState && "program" in updated) {
+      this.byteBeat.evalProgram(state.program!);
     }
 
-    if (!initial && state.playing != null) {
+    if (oldState && "playing" in updated) {
       this.byteBeat.setPlaying(state.playing);
       this.vizzy.setPlaying(state.playing);
     }
 
-    if (state.gain != null) {
+    if ("gain" in updated) {
       this.byteBeat.setGain(state.gain);
     }
 
-    if (state.bitDepth != null) {
+    if ("bitDepth" in updated) {
       this.byteBeat.setBitDepth(state.bitDepth);
     }
 
-    if (state.sampleRate != null) {
+    if ("sampleRate" in updated) {
       this.byteBeat.setSampleRate(state.sampleRate);
     }
   }
 
-  private updateUi(state: Partial<AppState>, initial: boolean = false) {
-    if (state.playing != null) {
+  private updateUi(
+    oldState: AppState | undefined,
+    state: AppState,
+    updated: Partial<AppState>,
+  ) {
+    const shareState = getShareState(state);
+    if (shareState) {
+      history.replaceState(
+        null,
+        "",
+        location.pathname + `#${App.encodeShareState(shareState)}`,
+      );
+    }
+
+    if (state.program && (!oldState || "program" in updated)) {
+      this.elements.programEditor.value = state.program.programText;
+    }
+
+    if ("playing" in updated) {
       this.elements.playstateToggle.innerText = state.playing
         ? "pause"
         : "play";
     }
 
-    this.elements.playstateToggle.disabled = this.state.program == null;
+    this.elements.playstateToggle.disabled = state.program == null;
 
-    if (state.bitDepth != null) {
+    if (!oldState || "bitDepth" in updated) {
       const bdInput = this.elements.bitDepth.find(
         ([val, _]) => val === state.bitDepth,
       )?.[1];
@@ -79,7 +110,7 @@ export class App {
       }
     }
 
-    if (state.sampleRate != null) {
+    if (!oldState || updated.sampleRate) {
       const srInput = this.elements.sampleRate.find(
         ([val, _]) => val === state.sampleRate,
       )?.[1];
@@ -87,18 +118,13 @@ export class App {
         srInput.checked = true;
       }
     }
-
-    if (
-      !initial &&
-      ("program" in state || "bitDepth" in state || "sampleRate" in state)
-    ) {
-      history.pushState(this.state, "", `#${this.encodeState()}`);
-    }
   }
 
   private listenForEvents() {
     const { programEditor, evalButton, playstateToggle } = this.elements;
     const { program } = this.state;
+
+    window.addEventListener("hashchange", console.log);
 
     evalButton.disabled = programEditor.value.trim().length === 0;
     playstateToggle.disabled = program == null;
@@ -153,18 +179,35 @@ export class App {
         }
       };
     }
+
+    this.elements.shareButton.onclick = () => {
+      navigator.clipboard
+        .writeText(window.location.toString())
+        // TODO better notification, some kind of toast
+        .then(() => alert("Copied!"));
+    };
   }
 
   private get state(): AppState {
     return this.stateMgr.state;
   }
 
-  private encodeState(): string {
-    return b64Encode(JSON.stringify(this.state));
+  private static getInitialState(): AppState {
+    const hash = window.location.hash.substring(1);
+    if (!hash) {
+      return InitialState;
+    }
+
+    const shareState = this.decodeShareState(hash);
+    return mergeShareState(shareState)(InitialState);
   }
 
-  private decodeState(encoded: string): string {
-    return b64Encode(JSON.parse(encoded));
+  private static encodeShareState(shareState: ShareState): string {
+    return b64Encode(JSON.stringify(shareState));
+  }
+
+  private static decodeShareState(encoded: string): ShareState {
+    return JSON.parse(b64Decode(encoded));
   }
 
   static async create(elements: AppElements): Promise<App> {
