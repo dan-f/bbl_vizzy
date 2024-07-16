@@ -14,8 +14,14 @@ body {
   height: 100%;
   margin: 0;
 
-  --foreground: coral;
-  --focus: rgb(255, 0, 128);
+  --border: rgb(253, 122, 122);
+  --focus: rgb(214, 96, 96);
+  --type: #2385ec;
+}
+
+body {
+  z-index: -2;
+  background-color: rgb(10, 10, 10);
 }
 
 body,
@@ -29,7 +35,7 @@ button {
 fieldset {
   margin: unset;
   padding: 0.5em;
-  border: 4px solid var(--foreground);
+  border: 4px solid var(--border);
 }
 
 /* Adapted from https://moderncss.dev/pure-css-custom-styled-radio-buttons/ */
@@ -51,7 +57,7 @@ input[type="radio"]::before {
   width: 0.65em;
   height: 0.65em;
   transform: scale(0);
-  box-shadow: inset 1em 1em black;
+  box-shadow: inset 1em 1em var(--type);
 }
 
 input[type="radio"]:checked::before {
@@ -64,7 +70,7 @@ input[type="radio"]:checked::before {
 
 h1 {
   /* mix-blend-mode: difference; */
-  color: #2385ec;
+  color: var(--type);
   font-size: 4vw;
   text-align: center;
 }
@@ -88,6 +94,7 @@ h1 {
   gap: 0.5em;
   grid-template-rows: repeat(2, 1fr);
   grid-template-columns: repeat(8, 1fr);
+  color: var(--type);
 }
 
 #depth-ctrl {
@@ -121,8 +128,8 @@ fieldset {
   padding: 0.5em;
   resize: none;
 
-  border: 0.25em solid var(--foreground);
-  color: var(--foreground);
+  border: 0.25em solid var(--border);
+  color: var(--type);
   background-color: transparent;
 
   grid-column: 3 / 8;
@@ -130,8 +137,9 @@ fieldset {
 }
 
 .ctrl-button {
-  border: 0.25em solid var(--foreground);
+  border: 0.25em solid var(--border);
   background-color: transparent;
+  color: var(--type);
   text-transform: uppercase;
 }
 
@@ -154,4 +162,5 @@ fieldset {
   width: 100vw;
   height: 100vh;
   z-index: -1;
+  image-rendering: pixelated;
 }

@@ -1,7 +1,7 @@
 import { createAudioGraph } from "../audio-graph";
 import { ByteBeat, validateProgram } from "../byte-beat";
 import { StateManager } from "../lib";
-import { Vizzy } from "../Vizzy";
+import { Vizzy } from "../vizzy";
 import { AppElements } from "./AppElements";
 import {
   AppState,
@@ -45,6 +45,7 @@ export class App {
 
     if (!initial && state.playing != null) {
       this.byteBeat.setPlaying(state.playing);
+      this.vizzy.setPlaying(state.playing);
     }
 
     if (state.gain != null) {
@@ -67,6 +68,8 @@ export class App {
         : "play";
     }
 
+    this.elements.playstateToggle.disabled = this.state.program == null;
+
     if (state.bitDepth != null) {
       const bdInput = this.elements.bitDepth.find(
         ([val, _]) => val === state.bitDepth,
@@ -87,13 +90,11 @@ export class App {
   }
 
   private listenForEvents() {
-    const { programEditor, evalButton } = this.elements;
+    const { programEditor, evalButton, playstateToggle } = this.elements;
+    const { program } = this.state;
 
-    if (programEditor.value.trim().length === 0) {
-      evalButton.disabled = true;
-    } else {
-      evalButton.disabled = false;
-    }
+    evalButton.disabled = programEditor.value.trim().length === 0;
+    playstateToggle.disabled = program == null;
 
     programEditor.addEventListener("input", () => {
       if (programEditor.value.trim().length === 0 && !evalButton.disabled) {
@@ -145,6 +146,10 @@ export class App {
         }
       };
     }
+  }
+
+  private get state(): AppState {
+    return this.stateMgr.state;
   }
 
   static async create(elements: AppElements): Promise<App> {

@@ -27,6 +27,9 @@ const mkUpdateField =
   };
 
 export function togglePlaying(state: AppState): AppState {
+  if (state.program == null) {
+    return state;
+  }
   return { ...state, playing: !state.playing };
 }
 

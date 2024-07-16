@@ -15,7 +15,6 @@ export async function createAudioGraph(
   const gainNode = audioCtx.createGain();
   gainNode.gain.value = 0.15;
   const analyserNode = audioCtx.createAnalyser();
-  analyserNode.fftSize = 2 ** 13;
 
   bbNode.connect(gainNode);
   bbNode.connect(analyserNode);
