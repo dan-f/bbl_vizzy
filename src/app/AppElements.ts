@@ -7,4 +7,9 @@ export interface AppElements {
   sampleRate: [number, HTMLInputElement][];
   vizzyCanvas: HTMLCanvasElement;
   shareButton: HTMLButtonElement;
+  modal: {
+    dialog: HTMLDialogElement;
+    msg: HTMLElement;
+    close: HTMLElement;
+  };
 }

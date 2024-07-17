@@ -11,6 +11,19 @@
     <div id="page">
       <h1>BBL_VIZZY</h1>
       <button class="action-link" id="share">share</button>
+      <dialog id="modal" aria-labelledby="modal-message">
+        <div id="modal-layout">
+          <div id="modal-message"></div>
+          <button
+            class="action-link"
+            id="modal-close"
+            autofocus
+            aria-label="close"
+          >
+            <span aria-hidden="true">X</span>
+          </button>
+        </div>
+      </dialog>
       <form id="program-form">
         <fieldset id="depth-ctrl">
           <legend>depth</legend>

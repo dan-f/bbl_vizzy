@@ -37,6 +37,7 @@ export class Vizzy {
 
   private draw(): void {
     this.drawTime();
+    // this.drawFrequency();
     this.frame = (this.frame + 1) % this.canvas.width;
     if (this.playing) {
       window.requestAnimationFrame(this.draw);

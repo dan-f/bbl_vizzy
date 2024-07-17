@@ -22,6 +22,11 @@ import { App, AppElements } from "./app";
       )! as NodeListOf<HTMLInputElement>),
     ].map((el) => [parseInt(el.value), el]),
     shareButton: document.getElementById("share")! as HTMLButtonElement,
+    modal: {
+      dialog: document.getElementById("modal")! as HTMLDialogElement,
+      msg: document.getElementById("modal-message")!,
+      close: document.getElementById("modal-close")!,
+    },
   };
 
   const app = await App.create(elements);

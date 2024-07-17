@@ -15,11 +15,13 @@ import {
   updateSampleRate,
 } from "./AppState";
 import { ConsoleLogger } from "./ConsoleLogger";
+import { Modal } from "./Modal";
 
 export class App {
   private stateMgr: StateManager<AppState>;
   private byteBeat: ByteBeat;
   private vizzy: Vizzy;
+  private modal: Modal;
   private elements: AppElements;
   private log = new ConsoleLogger("App");
 
@@ -27,6 +29,7 @@ export class App {
     this.stateMgr = new StateManager(App.getInitialState(), this.log);
     this.byteBeat = byteBeat;
     this.vizzy = vizzy;
+    this.modal = new Modal(elements.modal);
     this.elements = elements;
   }
 
@@ -154,7 +157,7 @@ export class App {
       try {
         this.stateMgr.transition(evalProgram(validateProgram(raw)));
       } catch (_error) {
-        alert("TODO better error handling UI");
+        this.modal.open("Whoops! Invalid program.");
       }
     };
 
@@ -183,8 +186,7 @@ export class App {
     this.elements.shareButton.onclick = () => {
       navigator.clipboard
         .writeText(window.location.toString())
-        // TODO better notification, some kind of toast
-        .then(() => alert("Copied!"));
+        .then(() => this.modal.open("Copied URL for this program!"));
     };
   }
 
