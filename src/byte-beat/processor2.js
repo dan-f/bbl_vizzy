@@ -4,17 +4,10 @@
  * `AudioWorkletGlobalScope`.
  */
 
-import { BbMessage, BbMessageType } from "./message";
-
 const DEFAULT_BIT_DEPTH = 8;
 const DEFAULT_SAMPLE_RATE = 10000;
 
 class ByteBeatProcessor extends AudioWorkletProcessor {
-  globalSample: number;
-  currentSample: number;
-  counter: number;
-  fn: (t: number) => number;
-
   constructor() {
     super();
     this.globalSample = 0;
@@ -22,7 +15,7 @@ class ByteBeatProcessor extends AudioWorkletProcessor {
     this.counter = 0;
     this.fn = () => 0;
 
-    this.port.onmessage = (event: MessageEvent<BbMessage>) => {
+    this.port.onmessage = (event) => {
       this.processMessage(event.data);
     };
   }
@@ -46,11 +39,7 @@ class ByteBeatProcessor extends AudioWorkletProcessor {
     ];
   }
 
-  process(
-    _inputs: Float32Array[][],
-    outputs: Float32Array[][],
-    parameters: Record<string, Float32Array>,
-  ): boolean {
+  process(_inputs, outputs, parameters) {
     for (let s = 0; s < outputs[0][0].length; s++) {
       if (this.counter <= 0) {
         const t = this.globalSample;
@@ -77,13 +66,11 @@ class ByteBeatProcessor extends AudioWorkletProcessor {
     return true;
   }
 
-  processMessage(message: BbMessage) {
+  processMessage(message) {
     switch (message.type) {
-      case BbMessageType.UpdateFn: {
-        // this.fn = new Function(message.body) as (t: number) => number;
-        this.fn = new Function("t", `return ${message.body}`) as (
-          t: number,
-        ) => number;
+      case "UPDATE_FN": {
+        // this.fn = eval(message.body);
+        this.fn = new Function("t", `return ${message.body}`);
         break;
       }
     }

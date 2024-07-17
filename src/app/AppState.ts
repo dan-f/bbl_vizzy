@@ -57,11 +57,7 @@ export function togglePlaying(state: AppState): AppState {
 export const evalProgram =
   (program: ValidatedProgram) =>
   (state: AppState): AppState => {
-    if (
-      program.programText === state.program?.programText &&
-      program.fnText === state.program?.fnText &&
-      state.playing
-    ) {
+    if (program.programText === state.program?.programText && state.playing) {
       return state;
     }
 
