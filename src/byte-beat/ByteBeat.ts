@@ -26,7 +26,10 @@ export class ByteBeat {
   }
 
   evalProgram(program: ValidatedProgram) {
-    this.sendMessage({ type: BbMessageType.UpdateFn, body: program.fnText });
+    this.sendMessage({
+      type: BbMessageType.UpdateFn,
+      body: program.programText,
+    });
   }
 
   setGain(gain: number) {

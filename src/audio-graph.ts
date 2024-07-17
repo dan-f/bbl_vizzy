@@ -1,4 +1,4 @@
-import byteBeatProcessorUrl from "./byte-beat/processor?url";
+import byteBeatProcessorUrl from "./byte-beat/processor?worker&url";
 
 interface AudioGraph {
   bbNode: AudioWorkletNode;

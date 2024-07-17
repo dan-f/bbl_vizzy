@@ -1,6 +1,6 @@
 @font-face {
   font-family: Sigma AF;
-  src: url(Web437_Sigma_RM_8x8.woff);
+  src: url("Web437_Sigma_RM_8x8.woff");
 }
 
 *,
@@ -29,7 +29,7 @@ body,
 textarea,
 input,
 button {
-  font-family: Sigma AF;
+  font-family: "Sigma AF";
   margin: unset;
 }
 
