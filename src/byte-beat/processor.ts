@@ -10,18 +10,13 @@ const DEFAULT_BIT_DEPTH = 8;
 const DEFAULT_SAMPLE_RATE = 10000;
 
 class ByteBeatProcessor extends AudioWorkletProcessor {
-  globalSample: number;
-  currentSample: number;
-  counter: number;
-  fn: (t: number) => number;
+  globalSample = 0;
+  currentSample = 0;
+  counter = 0;
+  fn: (t: number) => number = () => 0;
 
   constructor() {
     super();
-    this.globalSample = 0;
-    this.currentSample = 0;
-    this.counter = 0;
-    this.fn = () => 0;
-
     this.port.onmessage = (event: MessageEvent<BbMessage>) => {
       this.processMessage(event.data);
     };
@@ -80,7 +75,6 @@ class ByteBeatProcessor extends AudioWorkletProcessor {
   processMessage(message: BbMessage) {
     switch (message.type) {
       case BbMessageType.UpdateFn: {
-        // this.fn = new Function(message.body) as (t: number) => number;
         this.fn = new Function("t", `return ${message.body}`) as (
           t: number,
         ) => number;
