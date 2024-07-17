@@ -2,6 +2,11 @@
 
 import { Color, lerp, serialize } from "./Color";
 
+export enum AnimationType {
+  Time = "TIME",
+  Freq = "FREQ",
+}
+
 export class Vizzy {
   analyser: AnalyserNode;
   frequencyData: Uint8Array;
@@ -10,6 +15,7 @@ export class Vizzy {
   canvas: HTMLCanvasElement;
   canvasContext: CanvasRenderingContext2D;
 
+  animationType = AnimationType.Time;
   playing = false;
   palette = Vizzy.buildPalette();
   pixelSize = 1;
@@ -35,9 +41,19 @@ export class Vizzy {
     this.draw();
   }
 
+  setAnimationType(animationType: AnimationType) {
+    this.animationType = animationType;
+  }
+
   private draw(): void {
-    this.drawTime();
-    // this.drawFrequency();
+    switch (this.animationType) {
+      case AnimationType.Time:
+        this.drawTime();
+        break;
+      case AnimationType.Freq:
+        this.drawFrequency();
+        break;
+    }
     this.frame = (this.frame + 1) % this.canvas.width;
     if (this.playing) {
       window.requestAnimationFrame(this.draw);
@@ -73,10 +89,10 @@ export class Vizzy {
   }
 
   private static buildPalette(): string[] {
-    // const dark: Color = [15, 56, 15];
-    // const light: Color = [155, 188, 15];
-    const dark: Color = [10, 10, 10];
-    const light: Color = [200, 50, 200];
+    const dark: Color = [15, 56, 15];
+    const light: Color = [155, 188, 15];
+    // const dark: Color = [10, 10, 10];
+    // const light: Color = [200, 50, 200];
 
     const palette: string[] = [];
     for (let i = 0; i < 16; i++) {

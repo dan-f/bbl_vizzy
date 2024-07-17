@@ -24,8 +24,21 @@
           </button>
         </div>
       </dialog>
+      <form id="visuals-form">
+        <fieldset id="animation-type" class="fieldset-vert">
+          <legend>animation</legend>
+          <label class="radio-option"
+            ><span>time</span
+            ><input type="radio" name="animation-type" value="TIME" checked
+          /></label>
+          <label class="radio-option"
+            ><span>freq</span
+            ><input type="radio" name="animation-type" value="FREQ"
+          /></label>
+        </fieldset>
+      </form>
       <form id="program-form">
-        <fieldset id="depth-ctrl">
+        <fieldset id="depth-ctrl" class="fieldset-horiz">
           <legend>depth</legend>
           <label class="radio-option"
             ><span>4</span><input type="radio" name="depth" value="4"
@@ -37,7 +50,7 @@
             ><span>12</span><input type="radio" name="depth" value="12"
           /></label>
         </fieldset>
-        <fieldset id="rate-ctrl">
+        <fieldset id="rate-ctrl" class="fieldset-horiz">
           <legend>rate</legend>
           <label class="radio-option"
             ><span>3k</span><input type="radio" name="rate" value="3000"

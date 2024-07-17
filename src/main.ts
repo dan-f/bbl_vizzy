@@ -10,6 +10,11 @@ import { App, AppElements } from "./app";
     playstateToggle: document.getElementById(
       "ctrl-toggle-playstate",
     )! as HTMLButtonElement,
+    animationType: [
+      ...(document.querySelectorAll(
+        'input[name="animation-type"]',
+      )! as NodeListOf<HTMLInputElement>),
+    ].map((el) => [el.value, el]),
     vizzyCanvas: document.getElementById("vizzy")! as HTMLCanvasElement,
     bitDepth: [
       ...(document.querySelectorAll(

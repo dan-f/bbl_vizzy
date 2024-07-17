@@ -1,4 +1,5 @@
 import { ValidatedProgram } from "../byte-beat";
+import { AnimationType } from "../vizzy";
 
 export interface AppState {
   program?: ValidatedProgram;
@@ -6,6 +7,7 @@ export interface AppState {
   gain: number;
   bitDepth: number;
   sampleRate: number;
+  animationType: AnimationType;
 }
 
 export interface ShareState {
@@ -13,6 +15,7 @@ export interface ShareState {
   program: ValidatedProgram;
   bitDepth: number;
   sampleRate: number;
+  animationType: AnimationType;
 }
 
 const ShareStateVersion = 1;
@@ -22,14 +25,15 @@ export const InitialState: AppState = {
   gain: 0.15,
   bitDepth: 8,
   sampleRate: 8000,
+  animationType: AnimationType.Time,
 };
 
 export function getShareState(state: AppState): ShareState | undefined {
   if (!state.program) {
     return;
   }
-  const { program, bitDepth, sampleRate } = state;
-  return { v: 1, program, bitDepth, sampleRate };
+  const { program, bitDepth, sampleRate, animationType } = state;
+  return { v: 1, program, bitDepth, sampleRate, animationType };
 }
 
 const mkUpdateField =
@@ -65,14 +69,26 @@ export const evalProgram =
   };
 
 export const mergeShareState =
-  (incomingState: ShareState) => (state: AppState) => {
+  (incomingState: ShareState) =>
+  (state: AppState): AppState => {
     if (incomingState.v !== ShareStateVersion) {
       return state;
     }
-    const { program, bitDepth, sampleRate } = incomingState;
-    return { ...state, program, bitDepth, sampleRate };
+    const { v, ...rest } = incomingState;
+    return { ...state, ...rest };
+  };
+
+export const updateAnimationType =
+  (animationType: string) =>
+  (state: AppState): AppState => {
+    const asEnum = animationType as AnimationType;
+    if (!Object.values(AnimationType).includes(asEnum)) {
+      return state;
+    }
+    return { ...state, animationType: asEnum };
   };
 
 export const updateGain = mkUpdateField("gain");
 export const updateBitDepth = mkUpdateField("bitDepth");
 export const updateSampleRate = mkUpdateField("sampleRate");
+// export const updateAnimationType = mkUpdateField("animationType");

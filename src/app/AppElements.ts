@@ -3,6 +3,7 @@ export interface AppElements {
   programEditor: HTMLTextAreaElement;
   evalButton: HTMLInputElement;
   playstateToggle: HTMLButtonElement;
+  animationType: [string, HTMLInputElement][];
   bitDepth: [number, HTMLInputElement][];
   sampleRate: [number, HTMLInputElement][];
   vizzyCanvas: HTMLCanvasElement;

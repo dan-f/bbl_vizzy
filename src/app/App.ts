@@ -11,11 +11,14 @@ import {
   mergeShareState,
   ShareState,
   togglePlaying,
+  updateAnimationType,
   updateBitDepth,
   updateSampleRate,
 } from "./AppState";
 import { ConsoleLogger } from "./ConsoleLogger";
 import { Modal } from "./Modal";
+
+const log = new ConsoleLogger("App");
 
 export class App {
   private stateMgr: StateManager<AppState>;
@@ -23,10 +26,9 @@ export class App {
   private vizzy: Vizzy;
   private modal: Modal;
   private elements: AppElements;
-  private log = new ConsoleLogger("App");
 
   constructor(byteBeat: ByteBeat, vizzy: Vizzy, elements: AppElements) {
-    this.stateMgr = new StateManager(App.getInitialState(), this.log);
+    this.stateMgr = new StateManager(App.getInitialState(), log);
     this.byteBeat = byteBeat;
     this.vizzy = vizzy;
     this.modal = new Modal(elements.modal);
@@ -48,6 +50,7 @@ export class App {
     updated: Partial<AppState>,
   ) {
     this.updateBb(oldState, state, updated);
+    this.updateVizzy(oldState, state, updated);
     this.updateUi(oldState, state, updated);
   }
 
@@ -78,6 +81,16 @@ export class App {
     }
   }
 
+  private updateVizzy(
+    oldState: AppState | undefined,
+    state: AppState,
+    updated: Partial<AppState>,
+  ) {
+    if (!oldState || "animationType" in updated) {
+      this.vizzy.setAnimationType(state.animationType);
+    }
+  }
+
   private updateUi(
     oldState: AppState | undefined,
     state: AppState,
@@ -85,6 +98,7 @@ export class App {
   ) {
     const shareState = getShareState(state);
     if (shareState) {
+      log.debug("Updating hash fragment with share state", shareState);
       history.replaceState(
         null,
         "",
@@ -103,6 +117,15 @@ export class App {
     }
 
     this.elements.playstateToggle.disabled = state.program == null;
+
+    if (!oldState || "animationType" in updated) {
+      const animationTypeInput = this.elements.animationType.find(
+        ([val, _]) => val === state.animationType,
+      )?.[1];
+      if (animationTypeInput) {
+        animationTypeInput.checked = true;
+      }
+    }
 
     if (!oldState || "bitDepth" in updated) {
       const bdInput = this.elements.bitDepth.find(
@@ -167,6 +190,14 @@ export class App {
       }
     };
 
+    for (const [_, input] of this.elements.animationType) {
+      input.onchange = () => {
+        if (input.checked) {
+          this.stateMgr.transition(updateAnimationType(input.value));
+        }
+      };
+    }
+
     for (const [_, input] of this.elements.bitDepth) {
       input.onchange = () => {
         if (input.checked) {
@@ -201,6 +232,7 @@ export class App {
     }
 
     const shareState = this.decodeShareState(hash);
+    log.debug("Hydrating from hash fragment with share state", shareState);
     return mergeShareState(shareState)(InitialState);
   }
 

@@ -1,1 +1,1 @@
-export { Vizzy } from "./Vizzy";
+export { AnimationType, Vizzy } from "./Vizzy";

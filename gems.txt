@@ -1,0 +1,13 @@
+PAUL GEMS
+
+t*(69&t>>10) ^ t*(43&t>>11) || t*(42&t>>8)
+
+CHAT GPT GEMS
+
+(t * (t >> 12 | t >> 10) & (t >> 8) | t >> 4)
+
+MUSIC_FORMULA_COLLECTION GEMS
+
+(t>>7|t|t>>6)*10+4*(t&t>>13|t>>6)
+
+http://localhost:5173/#eyJ2IjoxLCJwcm9ncmFtIjp7InByb2dyYW1UZXh0IjoiKHQqOSZ0Pj40fHQqNSZ0Pj43fHQqMyZ0LzEwMjQpLTEiLCJmblRleHQiOiIodCkgPT4gKHQqOSZ0Pj40fHQqNSZ0Pj43fHQqMyZ0LzEwMjQpLTEifSwiYml0RGVwdGgiOjgsInNhbXBsZVJhdGUiOjIwMDAwfQ==
