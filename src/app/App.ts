@@ -177,11 +177,12 @@ export class App {
     this.elements.programForm.onsubmit = (event) => {
       event.preventDefault();
       const raw = this.elements.programEditor.value;
-      try {
-        this.stateMgr.transition(evalProgram(validateProgram(raw)));
-      } catch (_error) {
+      const validated = validateProgram(raw);
+      if (!validated) {
         this.modal.open("Whoops! Invalid program.");
+        return;
       }
+      this.stateMgr.transition(evalProgram(validated));
     };
 
     this.elements.programEditor.onkeydown = (event) => {
