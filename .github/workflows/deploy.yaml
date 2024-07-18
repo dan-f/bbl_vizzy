@@ -2,7 +2,7 @@ name: Deploy app to GH Pages
 
 on:
   push:
-    branches: ["release"]
+    tags: ["v*"]
 
 # Sets the GITHUB_TOKEN permissions to allow deployment to GitHub Pages
 permissions:
