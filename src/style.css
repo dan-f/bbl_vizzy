@@ -193,17 +193,19 @@ fieldset {
 .radio-option {
   display: grid;
   gap: 0.5rem;
-  justify-items: center;
 }
 
 .fieldset-vert .radio-option {
+  width: 100%;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
+  justify-items: end;
 }
 
 .fieldset-horiz .radio-option {
   grid-template-rows: 1fr 1fr;
   grid-template-columns: 1fr;
+  justify-items: center;
 }
 
 #program-editor {
