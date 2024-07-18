@@ -5,7 +5,7 @@ export interface ValidatedProgram {
 export function validateProgram(
   programText: string,
 ): ValidatedProgram | undefined {
-  programText = programText.trim();
+  programText = programText.trim().replace(/\s+/gm, " ");
 
   if ([...programText].some(isIllegal)) {
     return;
@@ -35,6 +35,7 @@ function isIllegal(c: string, i: number, chars: string[]): boolean {
 }
 
 const AllowedChars = new Set([
+  " ",
   "+",
   "-",
   "*",
