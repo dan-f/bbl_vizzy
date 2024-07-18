@@ -5,7 +5,7 @@ export interface ValidatedProgram {
 export function validateProgram(
   programText: string,
 ): ValidatedProgram | undefined {
-  programText = programText.trim();
+  programText = programText.trim().replace(/\s+/gm, " ");
 
   if ([...programText].some(isIllegal)) {
     return;
