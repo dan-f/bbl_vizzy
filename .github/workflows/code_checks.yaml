@@ -16,11 +16,6 @@ jobs:
         with:
           node-version: 22
           cache: "npm"
-      - name: Install dependencies
+      # `npm ci` in fact runs `npm prepare` which in turn runs our static checks
+      - name: Install dependencies & run static checks
         run: npm ci
-      - name: TypeScript
-        run: npx tsc --noEmit
-      - name: Lint
-        run: npm run lint:check
-      - name: Format
-        run: npm run fmt:check
