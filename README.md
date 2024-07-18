@@ -16,7 +16,9 @@ Assuming you have the appropriate permissions, releases are done as follows.
 
 - Code must be on `main` to release, unless we're hotfixing
 - Identify the release candidate commit and PR it into `release`
+  - When merging, select `rebase and merge`
 - Once that PR lands, locally check out `release`
 - Run `npm run release -- <version>` (see `npm run release -- --help` for usage)
 - Assuming the release script succeeds, it will have created, tagged, and pushed a release commit. The deploy action should be underway.
 - At this point, PR the `release` branch into `main`
+  - When merging, select `rebase and merge`
