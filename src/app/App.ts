@@ -2,7 +2,7 @@ import { createAudioGraph } from "../audio-graph";
 import { ByteBeat, validateProgram } from "../byte-beat";
 import { b64Decode, b64Encode, StateManager } from "../lib";
 import { Vizzy } from "../vizzy";
-import { getPalette, Palette, PaletteOptions, serialize } from "../vizzy/Color";
+import { getPalette, Palette, PaletteOption, serialize } from "../vizzy/Color";
 import { AppElements } from "./AppElements";
 import {
   AppState,
@@ -119,7 +119,7 @@ export class App {
 
     if ("palette" in updated) {
       const paletteInput = this.elements.palette.find(
-        ([val, _]) => val === state.animationType,
+        ([val, _]) => val === state.palette,
       )?.[1];
       if (paletteInput) {
         paletteInput.checked = true;
@@ -262,7 +262,7 @@ export class App {
     return new App(byteBeat, vizzy, elements);
   }
 
-  private updateCssFromPalette(palette: PaletteOptions): void {
+  private updateCssFromPalette(palette: PaletteOption): void {
     const paletteData: Palette = getPalette(palette);
     this.elements.root.style.setProperty(
       "--type",

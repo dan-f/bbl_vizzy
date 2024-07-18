@@ -5,7 +5,7 @@ import {
   getPalette,
   lerp,
   Palette,
-  PaletteOptions,
+  PaletteOption,
   serialize,
 } from "./Color";
 
@@ -24,7 +24,7 @@ export class Vizzy {
 
   animationType = AnimationType.Time;
   playing = false;
-  palette = Vizzy.createPaletteGradient(getPalette(PaletteOptions.Classic), 16);
+  palette = Vizzy.createPaletteGradient(getPalette(PaletteOption.Classic), 16);
   pixelSize = 1;
   frame = 0;
 
@@ -52,7 +52,7 @@ export class Vizzy {
     this.animationType = animationType;
   }
 
-  setPalette(paletteName: PaletteOptions) {
+  setPalette(paletteName: PaletteOption) {
     this.canvasContext.fillStyle = "#000000aa";
     this.canvasContext.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.palette = Vizzy.createPaletteGradient(getPalette(paletteName), 16);
