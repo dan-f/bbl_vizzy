@@ -8,15 +8,15 @@ export type Palette = {
   vizzyBackground: Color;
 };
 
-export enum PaletteOptions {
+export enum PaletteOption {
   Classic = "CLASSIC",
   Dirt = "DIRT",
   Heat = "HEAT",
   Mono = "MONO",
 }
 
-const PaletteData: { [key in PaletteOptions]: Palette } = {
-  [PaletteOptions.Classic]: {
+const PaletteDefs: { [key in PaletteOption]: Palette } = {
+  [PaletteOption.Classic]: {
     vizzyBackground: [15, 56, 15],
     vizzyForeground: [125, 140, 15],
     lineColor: [202, 67, 80],
@@ -24,7 +24,7 @@ const PaletteData: { [key in PaletteOptions]: Palette } = {
     focusColor: [202, 67, 80],
   },
 
-  [PaletteOptions.Dirt]: {
+  [PaletteOption.Dirt]: {
     vizzyBackground: [27, 10, 9],
     vizzyForeground: [171, 116, 9],
     lineColor: [213, 94, 7],
@@ -32,7 +32,7 @@ const PaletteData: { [key in PaletteOptions]: Palette } = {
     focusColor: [122, 65, 247],
   },
 
-  [PaletteOptions.Heat]: {
+  [PaletteOption.Heat]: {
     vizzyBackground: [40, 0, 180],
     vizzyForeground: [150, 30, 20],
     lineColor: [81, 20, 141],
@@ -40,7 +40,7 @@ const PaletteData: { [key in PaletteOptions]: Palette } = {
     focusColor: [202, 67, 80],
   },
 
-  [PaletteOptions.Mono]: {
+  [PaletteOption.Mono]: {
     vizzyBackground: [20, 20, 20],
     vizzyForeground: [80, 80, 80],
     lineColor: [100, 100, 100],
@@ -49,8 +49,8 @@ const PaletteData: { [key in PaletteOptions]: Palette } = {
   },
 };
 
-export function getPalette(option: PaletteOptions): Palette {
-  return PaletteData[option];
+export function getPalette(option: PaletteOption): Palette {
+  return PaletteDefs[option];
 }
 
 export function serialize(c: Color): string {
