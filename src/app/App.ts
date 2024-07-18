@@ -39,33 +39,25 @@ export class App {
 
   bootstrap() {
     this.handleStateTransition = this.handleStateTransition.bind(this);
-    this.handleStateTransition(undefined, this.state, {});
-    this.stateMgr.subscribe(({ oldState, state, updated }) =>
-      this.handleStateTransition(oldState, state, updated),
+    this.handleStateTransition(this.state, this.state);
+    this.stateMgr.subscribe(({ state, updated }) =>
+      this.handleStateTransition(state, updated),
     );
     this.listenForEvents();
   }
 
-  private handleStateTransition(
-    oldState: AppState | undefined,
-    state: AppState,
-    updated: Partial<AppState>,
-  ) {
-    this.updateBb(oldState, state, updated);
-    this.updateVizzy(oldState, state, updated);
-    this.updateUi(oldState, state, updated);
+  private handleStateTransition(state: AppState, updated: Partial<AppState>) {
+    this.updateBb(state, updated);
+    this.updateVizzy(state, updated);
+    this.updateUi(state, updated);
   }
 
-  private updateBb(
-    oldState: AppState | undefined,
-    state: AppState,
-    updated: Partial<AppState>,
-  ) {
-    if (oldState && "program" in updated) {
+  private updateBb(state: AppState, updated: Partial<AppState>) {
+    if ("program" in updated) {
       this.byteBeat.evalProgram(state.program!);
     }
 
-    if (oldState && "playing" in updated) {
+    if ("playing" in updated) {
       this.byteBeat.setPlaying(state.playing);
       this.vizzy.setPlaying(state.playing);
     }
@@ -83,25 +75,17 @@ export class App {
     }
   }
 
-  private updateVizzy(
-    oldState: AppState | undefined,
-    state: AppState,
-    updated: Partial<AppState>,
-  ) {
-    if (!oldState || "animationType" in updated) {
+  private updateVizzy(state: AppState, updated: Partial<AppState>) {
+    if ("animationType" in updated) {
       this.vizzy.setAnimationType(state.animationType);
     }
-    if (!oldState || "palette" in updated) {
+    if ("palette" in updated) {
       this.vizzy.setPalette(state.palette);
       this.updateCssFromPalette(state.palette);
     }
   }
 
-  private updateUi(
-    oldState: AppState | undefined,
-    state: AppState,
-    updated: Partial<AppState>,
-  ) {
+  private updateUi(state: AppState, updated: Partial<AppState>) {
     const shareState = getShareState(state);
     if (shareState) {
       log.debug("Updating hash fragment with share state", shareState);
@@ -112,8 +96,8 @@ export class App {
       );
     }
 
-    if (state.program && (!oldState || "program" in updated)) {
-      this.elements.programEditor.value = state.program.programText;
+    if ("program" in updated) {
+      this.elements.programEditor.value = state.program!.programText;
     }
 
     if ("playing" in updated) {
@@ -124,7 +108,7 @@ export class App {
 
     this.elements.playstateToggle.disabled = state.program == null;
 
-    if (!oldState || "animationType" in updated) {
+    if ("animationType" in updated) {
       const animationTypeInput = this.elements.animationType.find(
         ([val, _]) => val === state.animationType,
       )?.[1];
@@ -133,7 +117,7 @@ export class App {
       }
     }
 
-    if (!oldState || "palette" in updated) {
+    if ("palette" in updated) {
       const paletteInput = this.elements.palette.find(
         ([val, _]) => val === state.animationType,
       )?.[1];
@@ -142,7 +126,7 @@ export class App {
       }
     }
 
-    if (!oldState || "bitDepth" in updated) {
+    if ("bitDepth" in updated) {
       const bdInput = this.elements.bitDepth.find(
         ([val, _]) => val === state.bitDepth,
       )?.[1];
@@ -151,7 +135,7 @@ export class App {
       }
     }
 
-    if (!oldState || updated.sampleRate) {
+    if (updated.sampleRate) {
       const srInput = this.elements.sampleRate.find(
         ([val, _]) => val === state.sampleRate,
       )?.[1];
