@@ -1,5 +1,6 @@
 import { ValidatedProgram } from "../byte-beat";
 import { AnimationType } from "../vizzy";
+import { PaletteOptions } from "../vizzy/Color";
 
 export interface AppState {
   program?: ValidatedProgram;
@@ -8,6 +9,7 @@ export interface AppState {
   bitDepth: number;
   sampleRate: number;
   animationType: AnimationType;
+  palette: PaletteOptions;
 }
 
 export interface ShareState {
@@ -26,6 +28,7 @@ export const InitialState: AppState = {
   bitDepth: 8,
   sampleRate: 8000,
   animationType: AnimationType.Time,
+  palette: PaletteOptions.Classic,
 };
 
 export function getShareState(state: AppState): ShareState | undefined {
@@ -82,6 +85,16 @@ export const updateAnimationType =
       return state;
     }
     return { ...state, animationType: asEnum };
+  };
+
+export const updatePalette =
+  (palette: string) =>
+  (state: AppState): AppState => {
+    const asEnum = palette as PaletteOptions;
+    if (!Object.values(PaletteOptions).includes(asEnum)) {
+      return state;
+    }
+    return { ...state, palette: asEnum };
   };
 
 export const updateGain = mkUpdateField("gain");

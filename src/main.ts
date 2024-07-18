@@ -15,6 +15,11 @@ import { App, AppElements } from "./app";
         'input[name="animation-type"]',
       )! as NodeListOf<HTMLInputElement>),
     ].map((el) => [el.value, el]),
+    palette: [
+      ...(document.querySelectorAll(
+        'input[name="palette"]',
+      )! as NodeListOf<HTMLInputElement>),
+    ].map((el) => [el.value, el]),
     vizzyCanvas: document.getElementById("vizzy")! as HTMLCanvasElement,
     bitDepth: [
       ...(document.querySelectorAll(
@@ -32,6 +37,7 @@ import { App, AppElements } from "./app";
       msg: document.getElementById("modal-message")!,
       close: document.getElementById("modal-close")!,
     },
+    root: document.body as HTMLElement,
   };
 
   const app = await App.create(elements);

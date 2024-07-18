@@ -2,6 +2,7 @@ import { createAudioGraph } from "../audio-graph";
 import { ByteBeat, validateProgram } from "../byte-beat";
 import { b64Decode, b64Encode, StateManager } from "../lib";
 import { Vizzy } from "../vizzy";
+import { getPalette, Palette, PaletteOptions, serialize } from "../vizzy/Color";
 import { AppElements } from "./AppElements";
 import {
   AppState,
@@ -13,6 +14,7 @@ import {
   togglePlaying,
   updateAnimationType,
   updateBitDepth,
+  updatePalette,
   updateSampleRate,
 } from "./AppState";
 import { ConsoleLogger } from "./ConsoleLogger";
@@ -89,6 +91,10 @@ export class App {
     if (!oldState || "animationType" in updated) {
       this.vizzy.setAnimationType(state.animationType);
     }
+    if (!oldState || "palette" in updated) {
+      this.vizzy.setPalette(state.palette);
+      this.updateCssFromPalette(state.palette);
+    }
   }
 
   private updateUi(
@@ -124,6 +130,15 @@ export class App {
       )?.[1];
       if (animationTypeInput) {
         animationTypeInput.checked = true;
+      }
+    }
+
+    if (!oldState || "palette" in updated) {
+      const paletteInput = this.elements.palette.find(
+        ([val, _]) => val === state.animationType,
+      )?.[1];
+      if (paletteInput) {
+        paletteInput.checked = true;
       }
     }
 
@@ -199,6 +214,14 @@ export class App {
       };
     }
 
+    for (const [_, input] of this.elements.palette) {
+      input.onchange = () => {
+        if (input.checked) {
+          this.stateMgr.transition(updatePalette(input.value));
+        }
+      };
+    }
+
     for (const [_, input] of this.elements.bitDepth) {
       input.onchange = () => {
         if (input.checked) {
@@ -253,5 +276,21 @@ export class App {
     const vizzy = new Vizzy(analyserNode, elements.vizzyCanvas);
 
     return new App(byteBeat, vizzy, elements);
+  }
+
+  private updateCssFromPalette(palette: PaletteOptions): void {
+    const paletteData: Palette = getPalette(palette);
+    this.elements.root.style.setProperty(
+      "--type",
+      serialize(paletteData.textColor),
+    );
+    this.elements.root.style.setProperty(
+      "--border",
+      serialize(paletteData.lineColor),
+    );
+    this.elements.root.style.setProperty(
+      "--focus",
+      serialize(paletteData.focusColor),
+    );
   }
 }

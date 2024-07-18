@@ -4,6 +4,7 @@ export interface AppElements {
   evalButton: HTMLInputElement;
   playstateToggle: HTMLButtonElement;
   animationType: [string, HTMLInputElement][];
+  palette: [string, HTMLInputElement][];
   bitDepth: [number, HTMLInputElement][];
   sampleRate: [number, HTMLInputElement][];
   vizzyCanvas: HTMLCanvasElement;
@@ -13,4 +14,5 @@ export interface AppElements {
     msg: HTMLElement;
     close: HTMLElement;
   };
+  root: HTMLElement;
 }

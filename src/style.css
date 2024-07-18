@@ -13,11 +13,10 @@ html,
 body {
   height: 100%;
   margin: 0;
-
-  --transparent-background: #00000078;
-  --border: rgb(253, 122, 122);
+  --transparent-background: #00000090;
+  --type: rgb(35, 133, 236);
+  --border: rgb(202, 67, 80);
   --focus: rgb(214, 96, 96);
-  --type: #2385ec;
 }
 
 body {
@@ -70,7 +69,6 @@ input[type="radio"]:checked::before {
 }
 
 h1 {
-  /* mix-blend-mode: difference; */
   margin: unset;
   padding: 1rem;
   color: var(--type);
@@ -151,6 +149,10 @@ form {
   flex-direction: column;
 }
 
+#palette {
+  background-color: var(--transparent-background);
+}
+
 #program-form {
   /* grid item properties */
   grid-row: 4;
@@ -191,17 +193,19 @@ fieldset {
 .radio-option {
   display: grid;
   gap: 0.5rem;
-  justify-items: center;
 }
 
 .fieldset-vert .radio-option {
+  width: 100%;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
+  justify-items: end;
 }
 
 .fieldset-horiz .radio-option {
   grid-template-rows: 1fr 1fr;
   grid-template-columns: 1fr;
+  justify-items: center;
 }
 
 #program-editor {
