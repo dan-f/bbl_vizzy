@@ -51,7 +51,7 @@ async function doRelease(release) {
   pkgJson.version = newVersion;
   await tryOrDie(
     prettier
-      .format(JSON.stringify(pkgJson), { parser: "json" })
+      .format(JSON.stringify(pkgJson), { parser: "json-stringify" })
       .then((s) => fs.writeFile(pkgJsonPath, s)),
     "Failed to update `package.json`",
   );
@@ -63,10 +63,7 @@ async function doRelease(release) {
     git.addAnnotatedTag(`v${newVersion}`, commitMsg),
     "Failed tag the release",
   );
-  await tryOrDie(
-    git.push(undefined, releaseBranch),
-    `Failed to push to '${releaseBranch}'`,
-  );
+  await tryOrDie(git.push(), `Failed to push to '${releaseBranch}'`);
   await tryOrDie(git.pushTags(), "Failed to push tags");
 
   console.log(`Released v${newVersion}!`);
