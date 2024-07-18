@@ -13,11 +13,10 @@ html,
 body {
   height: 100%;
   margin: 0;
-
-  --transparent-background: #00000078;
-  --border: rgb(253, 122, 122);
+  --transparent-background: #00000090;
+  --type: rgb(35, 133, 236);
+  --border: rgb(202, 67, 80);
   --focus: rgb(214, 96, 96);
-  --type: #2385ec;
 }
 
 body {
@@ -70,7 +69,6 @@ input[type="radio"]:checked::before {
 }
 
 h1 {
-  /* mix-blend-mode: difference; */
   margin: unset;
   padding: 1rem;
   color: var(--type);
@@ -149,6 +147,10 @@ form {
   background-color: var(--transparent-background);
   display: flex;
   flex-direction: column;
+}
+
+#palette {
+  background-color: var(--transparent-background);
 }
 
 #program-form {

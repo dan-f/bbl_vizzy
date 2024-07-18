@@ -35,6 +35,7 @@ function isIllegal(c: string, i: number, chars: string[]): boolean {
 }
 
 const AllowedChars = new Set([
+  " ",
   "+",
   "-",
   "*",

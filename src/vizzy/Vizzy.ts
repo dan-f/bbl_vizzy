@@ -1,6 +1,13 @@
 // const palette = ["#8bac0f", "#9bbc0f", "#306230", "#0f380f", "#0f380f"];
 
-import { Color, lerp, serialize } from "./Color";
+import {
+  Color,
+  getPalette,
+  lerp,
+  Palette,
+  PaletteOptions,
+  serialize,
+} from "./Color";
 
 export enum AnimationType {
   Time = "TIME",
@@ -17,7 +24,7 @@ export class Vizzy {
 
   animationType = AnimationType.Time;
   playing = false;
-  palette = Vizzy.buildPalette();
+  palette = Vizzy.createPaletteGradient(getPalette(PaletteOptions.Classic), 16);
   pixelSize = 1;
   frame = 0;
 
@@ -45,6 +52,12 @@ export class Vizzy {
     this.animationType = animationType;
   }
 
+  setPalette(paletteName: PaletteOptions) {
+    this.canvasContext.fillStyle = "#000000aa";
+    this.canvasContext.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.palette = Vizzy.createPaletteGradient(getPalette(paletteName), 16);
+  }
+
   private draw(): void {
     switch (this.animationType) {
       case AnimationType.Time:
@@ -64,8 +77,8 @@ export class Vizzy {
     this.analyser.getByteFrequencyData(this.frequencyData);
     const samples = this.frequencyData.length;
     for (let i = 0; i < samples; i++) {
-      const sample = this.frequencyData[i];
-      const ndx = Math.floor((this.palette.length * sample) / 256);
+      const sample = Math.pow(this.frequencyData[i] / 256, 2);
+      const ndx = Math.floor(this.palette.length * sample);
       const color = this.palette[ndx];
       const y = (this.canvas.height * i) / samples;
       const x = (this.canvas.width * this.frame) / samples;
@@ -88,18 +101,19 @@ export class Vizzy {
     }
   }
 
-  private static buildPalette(): string[] {
-    const dark: Color = [15, 56, 15];
-    const light: Color = [155, 188, 15];
-    // const dark: Color = [10, 10, 10];
-    // const light: Color = [200, 50, 200];
+  public static createPaletteGradient(
+    palette: Palette,
+    _depth: number = 16,
+  ): string[] {
+    const background: Color = palette.vizzyBackground;
+    const foreground: Color = palette.vizzyForeground;
 
-    const palette: string[] = [];
-    for (let i = 0; i < 16; i++) {
-      const color = lerp(dark, light, i / 15);
-      palette.push(serialize(color));
+    const colorArray = [];
+    for (let i = 0; i < _depth; i++) {
+      const color = lerp(background, foreground, i / (_depth - 1));
+      colorArray.push(serialize(color));
     }
 
-    return palette;
+    return colorArray;
   }
 }
